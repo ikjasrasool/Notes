@@ -1,0 +1,534 @@
+
+
+---
+
+# # **📌 1. Spring Boot Dependency Injection (DI)**
+
+### Three ways of injecting dependencies:
+
+### **1️⃣ Field Injection (Old – Not recommended)**
+
+```java
+@Autowired
+private ProductService productService;
+```
+
+### ✔ Pros
+
+* Easy to write
+
+### ❌ Cons
+
+* Hard to test
+* No immutability
+
+---
+
+### **2️⃣ Setter Injection**
+
+```java
+private ProductService productService;
+
+@Autowired
+public void setProductService(ProductService productService) {
+    this.productService = productService;
+}
+```
+
+---
+
+### **3️⃣ Constructor Injection (BEST PRACTICE)**
+
+```java
+private final ProductService productService;
+
+public ProductController(ProductService productService) {
+    this.productService = productService;
+}
+```
+
+### ✔ Advantages
+
+* Immutable dependencies
+* Easy for unit testing
+* Works perfectly with Lombok (`@RequiredArgsConstructor`)
+
+---
+
+# # **📌 2. Lombok Advanced Annotations**
+
+| Annotation                 | Purpose                                        |
+| -------------------------- | ---------------------------------------------- |
+| `@Getter`                  | Auto getter                                    |
+| `@Setter`                  | Auto setter                                    |
+| `@Data`                    | Getter + Setter + toString + equals + hashCode |
+| `@NoArgsConstructor`       | Empty constructor                              |
+| `@AllArgsConstructor`      | Constructor with all fields                    |
+| `@Builder`                 | Builder design pattern                         |
+| `@RequiredArgsConstructor` | Inject final fields automatically              |
+
+---
+
+## ⭐ Example using Lombok + Constructor Injection
+
+```java
+@Service
+@RequiredArgsConstructor
+public class ProductService {
+    private final ProductRepository productRepository;
+}
+```
+
+---
+
+# # **📌 3. Exception Handling in Spring Boot (VERY IMPORTANT)**
+
+### Create a custom exception:
+
+```java
+public class ProductNotFoundException extends RuntimeException {
+    public ProductNotFoundException(String msg) {
+        super(msg);
+    }
+}
+```
+
+---
+
+### Global Exception Handler
+
+```java
+@RestControllerAdvice
+public class GlobalExceptionHandler {
+
+    @ExceptionHandler(ProductNotFoundException.class)
+    public ResponseEntity<?> handleException(ProductNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+    }
+}
+```
+
+---
+
+### Advantage
+
+* Clean controller
+* Standard error format
+* Reduces code duplication
+
+---
+
+# # **📌 4. DTO (Data Transfer Object)**
+
+Used to send limited/custom data to the client.
+
+### Example:
+
+### **ProductDTO**
+
+```java
+@Data
+public class ProductDTO {
+    private String name;
+    private double price;
+}
+```
+
+---
+
+### Convert Entity ↔ DTO using Mapper
+
+```java
+public class ProductMapper {
+    public static ProductDTO toDTO(Product product) {
+        ProductDTO dto = new ProductDTO();
+        dto.setName(product.getName());
+        dto.setPrice(product.getPrice());
+        return dto;
+    }
+}
+```
+
+---
+
+# # **📌 5. Spring Boot Mapper Libraries**
+
+| Library     | Purpose                    |
+| ----------- | -------------------------- |
+| MapStruct   | Fast, compile-time mapping |
+| ModelMapper | Runtime mapping            |
+
+✔ MapStruct is recommended for large projects.
+
+---
+
+# # **📌 6. Spring Boot Security + JWT Authentication (INTERVIEW FAVORITE)**
+
+---
+
+# **🔥 Complete JWT Workflow**
+
+### 1️⃣ User sends login request
+
+`POST /auth/login`
+
+```json
+{
+  "username": "ikjas",
+  "password": "1234"
+}
+```
+
+---
+
+### 2️⃣ Validate username & password
+
+---
+
+### 3️⃣ Generate JWT Token
+
+A JWT contains:
+
+```
+Header + Payload + Signature
+```
+
+Example payload:
+
+```json
+{
+  "sub": "ikjas",
+  "roles": "ROLE_USER",
+  "iat": 171205,
+  "exp": 171505
+}
+```
+
+---
+
+### 4️⃣ Return token to client
+
+```json
+{
+  "token": "eyJhbGciOiJIUzI1NiIsIn..."
+}
+```
+
+---
+
+### 5️⃣ Client stores token in:
+
+✔ LocalStorage
+✔ SessionStorage
+✔ Cookies
+
+Never store in React state.
+
+---
+
+### 6️⃣ For every API call, client sends token
+
+```
+Authorization: Bearer {token}
+```
+
+---
+
+### 7️⃣ Backend validates token using Filter → Allows request
+
+---
+
+# **🔥 Benefits of JWT**
+
+* Stateless
+* No server-side sessions
+* Fast authentication
+* Works with microservices easily
+
+---
+
+# # **📌 7. Spring Boot Microservices (Very Important)**
+
+### Key Components:
+
+---
+
+## **1️⃣ Eureka Server (Service Discovery)**
+
+Stores microservice addresses
+Example:
+
+* Product-service
+* Order-service
+* Auth-service
+
+---
+
+## **2️⃣ API Gateway (Routing + Load Balancing)**
+
+Examples:
+
+* Spring Cloud Gateway
+* Netflix Zuul
+
+---
+
+## **3️⃣ Config Server**
+
+Centralized configuration store.
+
+---
+
+## **4️⃣ Circuit Breaker (Resilience)**
+
+Using:
+
+* Resilience4j
+* Hystrix (old)
+
+---
+
+## **5️⃣ Feign Client**
+
+Used to call another microservice easily.
+
+### Example:
+
+```java
+@FeignClient(name = "order-service")
+public interface OrderClient {
+
+    @GetMapping("/order/{id}")
+    OrderDTO getOrder(@PathVariable int id);
+}
+```
+
+---
+
+# # **📌 8. Spring Boot Actuator**
+
+Used for:
+
+* Health checks
+* Metrics
+* Monitoring
+* Application info
+
+Enable in `application.properties`:
+
+```properties
+management.endpoints.web.exposure.include=*
+```
+
+---
+
+# # **📌 9. Caching in Spring Boot**
+
+Use:
+
+* `@EnableCaching`
+* `@Cacheable`
+* `@CacheEvict`
+
+### Example:
+
+```java
+@Cacheable("products")
+public List<Product> getAllProduct() {
+    return productRepository.findAll();
+}
+```
+
+---
+
+# # **📌 10. Key Spring Boot Best Practices**
+
+### ✔ Prefer constructor injection
+
+### ✔ Use DTOs not entities in controller
+
+### ✔ Use @Service for business logic
+
+### ✔ Use @RestControllerAdvice for exception handling
+
+### ✔ Never expose DB schema in API
+
+### ✔ Use ResponseEntity<> everywhere
+
+### ✔ Do validation using @Valid & @NotNull
+
+### ✔ Use environment variables for DB password
+
+### ✔ Avoid business logic in controllers
+
+---
+
+# # **📌 100+ SPRING BOOT INTERVIEW QUESTIONS (TOP + ADVANCED)**
+
+---
+
+## **🔥 Basic Questions**
+
+1. What is Spring Boot?
+2. Advantages of Spring Boot?
+3. What is auto-configuration?
+4. What are starters in Spring Boot?
+5. Difference between Spring and Spring Boot?
+6. What is @SpringBootApplication?
+7. Embedded Tomcat meaning?
+8. What is application.properties vs application.yml?
+9. What is component scanning?
+10. What is dependency injection?
+
+---
+
+## **🔥 REST API Questions**
+
+11. What is @RestController?
+12. Difference between @Controller and @RestController?
+13. What is @RequestBody?
+14. What is @PathVariable?
+15. What is ResponseEntity?
+16. What is @RequestParam?
+17. GET vs POST vs PUT vs DELETE?
+18. idempotent meaning?
+19. Why PUT is idempotent?
+20. What is status code 201?
+
+---
+
+## **🔥 JPA + Hibernate**
+
+21. What is JPA?
+22. What is Hibernate?
+23. What is ORM?
+24. What is @Entity?
+25. What is @Id?
+26. What is GenerationType.IDENTITY?
+27. Cascade types?
+28. Fetch types?
+29. Difference between OneToOne vs OneToMany?
+30. Lazy vs Eager loading?
+
+---
+
+## **🔥 Spring Boot Architecture**
+
+31. What is service layer?
+32. Why use @Repository?
+33. Why use DTO?
+34. Why use @RestControllerAdvice?
+35. What is AOP?
+36. What are cross-cutting concerns?
+37. What are Spring Boot profiles?
+38. Difference between prototype vs singleton bean?
+39. What is bean lifecycle?
+40. What is application runner?
+
+---
+
+## **🔥 Spring Security + JWT**
+
+41. What is JWT?
+42. What is OAuth2?
+43. Difference between authentication & authorization?
+44. What is filter chain?
+45. What is BCryptPasswordEncoder?
+46. What is CSRF?
+47. How JWT stores user roles?
+48. How JWT is validated?
+49. What is token expiration?
+50. Difference between session & JWT?
+
+---
+
+## **🔥 Microservices Questions**
+
+51. What are microservices?
+52. Monolithic vs microservices?
+53. What is Eureka Discovery server?
+54. What is API Gateway?
+55. What is load balancing?
+56. What is distributed logging?
+57. What is Zuul?
+58. What is Feign Client?
+59. What is Config Server?
+60. What is Resilience4j?
+61. What is circuit breaker pattern?
+62. What is service registry?
+
+---
+
+## **🔥 Advanced Spring Boot**
+
+63. What is Actuator?
+64. What is caching in Spring Boot?
+65. @Cacheable vs @CacheEvict?
+66. What is WebClient?
+67. What is RestTemplate?
+    (Deprecated but still asked)
+68. What is Kafka?
+69. RabbitMQ vs Kafka?
+70. What is async in Spring Boot?
+71. What is @Transactional?
+72. Dirty checking in Hibernate?
+
+---
+
+## **🔥 Docker + Spring Boot**
+
+73. How to containerize Spring Boot?
+74. What is Dockerfile?
+75. Why use multi-stage build?
+76. Docker volume vs bind?
+
+---
+
+## **🔥 Database + Performance Questions**
+
+77. N+1 problem in JPA?
+78. How to solve N+1?
+79. Pagination in Spring Boot?
+80. Sorting in JPA?
+
+---
+
+## **🔥 Cloud Deployment**
+
+81. Deploy Spring Boot on AWS EC2?
+82. What is RDS?
+83. What is load balancer?
+
+---
+
+## **🔥 Testing in Spring Boot**
+
+84. What is Mockito?
+85. What is @WebMvcTest?
+86. What is @DataJpaTest?
+87. What is JUnit?
+
+---
+
+## **🔥 High-Level Architecture**
+
+88. What is CI/CD?
+89. What is GitOps?
+90. What is blue-green deployment?
+91. Canary deployment?
+
+---
+
+## **🔥 Misc Important**
+
+92. Difference between SOAP & REST?
+93. What is HATEOAS?
+94. What is rate limiting?
+95. What is scheduler in Spring Boot?
+96. What is cron expression?
+97. What is ObjectMapper?
+98. JSON ignore annotations?
+99. What is Lombok?
+100. What is circular dependency?
+
+---
