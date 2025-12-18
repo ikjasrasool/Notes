@@ -437,17 +437,128 @@ public class Main {
 
 **Use Case:** Thread-safe ArrayList (legacy, prefer Collections.synchronizedList)
 
+
+## 🔹 Creation
+
 ```java
 Vector<String> vector = new Vector<>();
-
-// Same methods as ArrayList, but synchronized
-vector.add("Element");
-vector.capacity();                 // Returns capacity
-vector.ensureCapacity(100);       // Ensures minimum capacity
-vector.elements();                 // Returns enumeration
 ```
 
 ---
+
+## 🔹 Common Methods (Same as ArrayList)
+
+```java
+vector.add("Element");     // Adds element
+vector.get(0);             // Gets element
+vector.set(0, "Updated");  // Updates element
+vector.remove(0);          // Removes by index
+vector.contains("Element");// Checks existence
+vector.size();             // Returns size
+vector.isEmpty();          // Checks empty
+vector.clear();            // Removes all elements
+```
+
+---
+
+## 🔹 Vector-Specific Methods
+
+```java
+vector.capacity();          // Returns current capacity
+vector.ensureCapacity(100); // Ensures minimum capacity
+vector.elements();          // Returns Enumeration
+```
+
+---
+
+## 🔹 Enumeration (Legacy Iterator)
+
+```java
+Enumeration<String> e = vector.elements();
+while(e.hasMoreElements()) {
+    System.out.println(e.nextElement());
+}
+```
+
+---
+
+## 🔹 Complete Example with Step-by-Step Output
+
+```java
+import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+
+        // Create Vector
+        Vector<String> vector = new Vector<>();
+        System.out.println("Initial vector: " + vector);
+        // Output: []
+
+        // add
+        vector.add("Element");
+        vector.add("Apple");
+        vector.add("Banana");
+        System.out.println("After adding elements: " + vector);
+        // Output: [Element, Apple, Banana]
+
+        // size
+        System.out.println("size(): " + vector.size());
+        // Output: 3
+
+        // capacity (default = 10)
+        System.out.println("capacity(): " + vector.capacity());
+        // Output: 10
+
+        // ensureCapacity
+        vector.ensureCapacity(100);
+        System.out.println("After ensureCapacity(100)");
+        System.out.println("capacity(): " + vector.capacity());
+        // Output: 100
+
+        // get
+        System.out.println("get(1): " + vector.get(1));
+        // Output: Apple
+
+        // set
+        vector.set(1, "Updated");
+        System.out.println("After set(1, \"Updated\"): " + vector);
+        // Output: [Element, Updated, Banana]
+
+        // contains
+        System.out.println("contains(\"Banana\"): " + vector.contains("Banana"));
+        // Output: true
+
+        // remove
+        vector.remove("Element");
+        System.out.println("After remove(\"Element\"): " + vector);
+        // Output: [Updated, Banana]
+
+        // Enumeration
+        System.out.print("Enumeration traversal: ");
+        Enumeration<String> en = vector.elements();
+        while (en.hasMoreElements()) {
+            System.out.print(en.nextElement() + " ");
+        }
+        System.out.println();
+        // Output: Updated Banana
+
+        // clear
+        vector.clear();
+        System.out.println("After clear(): " + vector);
+        // Output: []
+
+        // isEmpty
+        System.out.println("isEmpty(): " + vector.isEmpty());
+        // Output: true
+    }
+}
+```
+
+---
+
+
+
 
 ### Stack
 
@@ -892,6 +1003,7 @@ Arrays.deepToString(multiArray);
 **Use ArrayDeque when:**
 - You need stack or queue operations
 - You want better performance than LinkedList
+
 
 
 
