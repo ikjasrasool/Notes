@@ -62,40 +62,53 @@ Map (Interface) - Separate Hierarchy
 
 ### ArrayList
 
-**Use Case:** When you need fast random access and iteration
+## 🔹 Creation
 
 ```java
-// Creation
 ArrayList<String> list = new ArrayList<>();
 ArrayList<String> listWithCapacity = new ArrayList<>(100);
+```
 
-// Common Methods
-list.add("Element");              // Adds to end
-list.add(0, "First");             // Adds at index
-list.get(0);                       // Returns element at index
+---
+
+## 🔹 Common Methods
+
+```java
+list.add("Element");              // Adds element at the end
+list.add(0, "First");             // Adds element at index
+list.get(0);                      // Returns element at index
 list.set(0, "Updated");           // Updates element at index
-list.remove(0);                    // Removes by index
-list.remove("Element");           // Removes by object
+list.remove(0);                   // Removes element by index
+list.remove("Element");           // Removes element by value
 list.contains("Element");         // Checks existence
 list.indexOf("Element");          // Returns first index
 list.lastIndexOf("Element");      // Returns last index
-list.size();                       // Returns size
-list.isEmpty();                    // Checks if empty
-list.clear();                      // Removes all elements
-list.toArray();                    // Converts to array
-list.addAll(otherList);           // Adds all elements
-list.removeAll(otherList);        // Removes all matching
-list.retainAll(otherList);        // Keeps only matching
-list.subList(0, 5);               // Returns sublist view
+list.size();                      // Returns number of elements
+list.isEmpty();                   // Checks if list is empty
+list.clear();                     // Removes all elements
+list.toArray();                   // Converts list to array
+list.addAll(otherList);           // Adds all elements from another list
+list.removeAll(otherList);        // Removes matching elements
+list.retainAll(otherList);        // Keeps only matching elements
+list.subList(0, 5);               // Returns a sublist view
+```
 
-// Java 8+ Methods
-list.forEach(e -> System.out.println(e));
-list.replaceAll(e -> e.toUpperCase());
-list.removeIf(e -> e.startsWith("A"));
-list.sort(Comparator.naturalOrder());
+---
+
+## 🔹 Java 8+ Methods
+
+```java
+list.forEach(e -> System.out.println(e));  // Iteration
+list.replaceAll(e -> e.toUpperCase());     // Replace all elements
+list.removeIf(e -> e.startsWith("A"));     // Conditional removal
+list.sort(Comparator.naturalOrder());      // Sorting
 ```
-**Example**
-```
+
+---
+
+## 🔹 Complete Example with Step-by-Step Output
+
+```java
 import java.util.*;
 
 public class Main {
@@ -104,7 +117,7 @@ public class Main {
         // Create ArrayList
         ArrayList<String> list = new ArrayList<>();
         System.out.println("Initial list: " + list);
-        // Output: Initial list: []
+        // Output: []
 
         // Add elements
         list.add("Element");
@@ -236,8 +249,9 @@ public class Main {
         // Output: true
     }
 }
-
 ```
+
+---
 
 **Time Complexity:**
 - Add: O(1) amortized
@@ -751,5 +765,6 @@ Arrays.deepToString(multiArray);
 **Use ArrayDeque when:**
 - You need stack or queue operations
 - You want better performance than LinkedList
+
 
 
