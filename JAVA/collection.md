@@ -94,7 +94,7 @@ list.replaceAll(e -> e.toUpperCase());
 list.removeIf(e -> e.startsWith("A"));
 list.sort(Comparator.naturalOrder());
 ```
-##example
+**Example**
 ```
 import java.util.*;
 
@@ -751,4 +751,5 @@ Arrays.deepToString(multiArray);
 **Use ArrayDeque when:**
 - You need stack or queue operations
 - You want better performance than LinkedList
+
 
