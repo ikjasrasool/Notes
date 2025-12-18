@@ -94,6 +94,150 @@ list.replaceAll(e -> e.toUpperCase());
 list.removeIf(e -> e.startsWith("A"));
 list.sort(Comparator.naturalOrder());
 ```
+##example
+```
+import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+
+        // Create ArrayList
+        ArrayList<String> list = new ArrayList<>();
+        System.out.println("Initial list: " + list);
+        // Output: Initial list: []
+
+        // Add elements
+        list.add("Element");
+        System.out.println("After add(\"Element\"): " + list);
+        // Output: [Element]
+
+        list.add(0, "First");
+        System.out.println("After add(0, \"First\"): " + list);
+        // Output: [First, Element]
+
+        // Get element
+        System.out.println("get(0): " + list.get(0));
+        // Output: First
+
+        // Set element
+        list.set(0, "Updated");
+        System.out.println("After set(0, \"Updated\"): " + list);
+        // Output: [Updated, Element]
+
+        // Remove by index
+        list.remove(0);
+        System.out.println("After remove(0): " + list);
+        // Output: [Element]
+
+        // Remove by object
+        list.remove("Element");
+        System.out.println("After remove(\"Element\"): " + list);
+        // Output: []
+
+        // Add more elements
+        list.add("Apple");
+        list.add("Banana");
+        list.add("Apple");
+        System.out.println("After adding Apple, Banana, Apple: " + list);
+        // Output: [Apple, Banana, Apple]
+
+        // Contains
+        System.out.println("contains(\"Apple\"): " + list.contains("Apple"));
+        // Output: true
+
+        // IndexOf & LastIndexOf
+        System.out.println("indexOf(\"Apple\"): " + list.indexOf("Apple"));
+        // Output: 0
+
+        System.out.println("lastIndexOf(\"Apple\"): " + list.lastIndexOf("Apple"));
+        // Output: 2
+
+        // Size
+        System.out.println("size(): " + list.size());
+        // Output: 3
+
+        // isEmpty
+        System.out.println("isEmpty(): " + list.isEmpty());
+        // Output: false
+
+        // toArray
+        Object[] arr = list.toArray();
+        System.out.println("toArray(): " + Arrays.toString(arr));
+        // Output: [Apple, Banana, Apple]
+
+        // Another list
+        ArrayList<String> otherList = new ArrayList<>();
+        otherList.add("Banana");
+        otherList.add("Cherry");
+        System.out.println("otherList: " + otherList);
+        // Output: [Banana, Cherry]
+
+        // addAll
+        list.addAll(otherList);
+        System.out.println("After addAll(otherList): " + list);
+        // Output: [Apple, Banana, Apple, Banana, Cherry]
+
+        // removeAll
+        list.removeAll(otherList);
+        System.out.println("After removeAll(otherList): " + list);
+        // Output: [Apple, Apple]
+
+        // retainAll
+        list.add("Banana");
+        list.add("Cherry");
+        System.out.println("Before retainAll(otherList): " + list);
+        // Output: [Apple, Apple, Banana, Cherry]
+
+        list.retainAll(otherList);
+        System.out.println("After retainAll(otherList): " + list);
+        // Output: [Banana, Cherry]
+
+        // subList
+        list.clear();
+        list.add("A");
+        list.add("B");
+        list.add("C");
+        list.add("D");
+        list.add("E");
+        System.out.println("New list: " + list);
+        // Output: [A, B, C, D, E]
+
+        List<String> sub = list.subList(1, 4);
+        System.out.println("subList(1,4): " + sub);
+        // Output: [B, C, D]
+
+        // Java 8 forEach
+        System.out.print("forEach(): ");
+        list.forEach(e -> System.out.print(e + " "));
+        System.out.println();
+        // Output: A B C D E
+
+        // replaceAll
+        list.replaceAll(e -> e.toLowerCase());
+        System.out.println("After replaceAll(toLowerCase): " + list);
+        // Output: [a, b, c, d, e]
+
+        // removeIf
+        list.removeIf(e -> e.equals("c"));
+        System.out.println("After removeIf(e == \"c\"): " + list);
+        // Output: [a, b, d, e]
+
+        // sort
+        list.sort(Comparator.naturalOrder());
+        System.out.println("After sort(): " + list);
+        // Output: [a, b, d, e]
+
+        // clear
+        list.clear();
+        System.out.println("After clear(): " + list);
+        // Output: []
+
+        System.out.println("isEmpty(): " + list.isEmpty());
+        // Output: true
+    }
+}
+
+```
 
 **Time Complexity:**
 - Add: O(1) amortized
@@ -607,3 +751,4 @@ Arrays.deepToString(multiArray);
 **Use ArrayDeque when:**
 - You need stack or queue operations
 - You want better performance than LinkedList
+
