@@ -61,7 +61,7 @@ Map (Interface) - Separate Hierarchy
 - Index-based access
 
 ### ArrayList
-
+**use Case:** When you need fast random access and iteration
 ## 🔹 Creation
 
 ```java
@@ -265,38 +265,165 @@ public class Main {
 
 **Use Case:** When you need frequent insertions/deletions at beginning or middle
 
+
+## 🔹 Creation
+
 ```java
-// Creation
 LinkedList<String> list = new LinkedList<>();
+```
 
-// List Methods (same as ArrayList)
-list.add("Element");
-list.get(0);
+---
 
-// Additional LinkedList Methods
-list.addFirst("First");           // Adds at beginning
-list.addLast("Last");             // Adds at end
-list.getFirst();                   // Returns first element
-list.getLast();                    // Returns last element
-list.removeFirst();                // Removes first
-list.removeLast();                 // Removes last
-list.peek();                       // Returns first (null if empty)
-list.poll();                       // Removes and returns first
-list.offer("Element");            // Adds to end
-list.push("Element");             // Adds at beginning (stack)
-list.pop();                        // Removes from beginning (stack)
+## 🔹 List Methods (Same as ArrayList)
 
-// Iterator
+```java
+list.add("Element");      // Adds element
+list.get(0);              // Gets element at index
+list.set(0, "Updated");   // Updates element
+list.remove(0);           // Removes by index
+list.contains("Element"); // Checks existence
+list.size();              // Returns size
+list.isEmpty();           // Checks empty
+```
+
+---
+
+## 🔹 Additional LinkedList Methods
+
+```java
+list.addFirst("First");   // Adds at beginning
+list.addLast("Last");     // Adds at end
+list.getFirst();          // Returns first element
+list.getLast();           // Returns last element
+list.removeFirst();       // Removes first
+list.removeLast();        // Removes last
+list.peek();              // Returns first (null if empty)
+list.poll();              // Removes & returns first
+list.offer("Element");    // Adds at end
+list.push("Element");     // Adds at beginning (stack)
+list.pop();               // Removes from beginning (stack)
+```
+
+---
+
+## 🔹 Iterator Methods
+
+```java
 Iterator<String> it = list.iterator();
-while(it.hasNext()) {
-    System.out.println(it.next());
-}
-
 ListIterator<String> lit = list.listIterator();
-while(lit.hasNext()) {
-    System.out.println(lit.next());
+```
+
+---
+
+## 🔹 Complete Example with Step-by-Step Output
+
+```java
+import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+
+        // Create LinkedList
+        LinkedList<String> list = new LinkedList<>();
+        System.out.println("Initial list: " + list);
+        // Output: []
+
+        // add
+        list.add("Element");
+        System.out.println("After add(\"Element\"): " + list);
+        // Output: [Element]
+
+        // addFirst
+        list.addFirst("First");
+        System.out.println("After addFirst(\"First\"): " + list);
+        // Output: [First, Element]
+
+        // addLast
+        list.addLast("Last");
+        System.out.println("After addLast(\"Last\"): " + list);
+        // Output: [First, Element, Last]
+
+        // get
+        System.out.println("get(0): " + list.get(0));
+        // Output: First
+
+        // getFirst & getLast
+        System.out.println("getFirst(): " + list.getFirst());
+        // Output: First
+
+        System.out.println("getLast(): " + list.getLast());
+        // Output: Last
+
+        // removeFirst
+        list.removeFirst();
+        System.out.println("After removeFirst(): " + list);
+        // Output: [Element, Last]
+
+        // removeLast
+        list.removeLast();
+        System.out.println("After removeLast(): " + list);
+        // Output: [Element]
+
+        // offer
+        list.offer("A");
+        list.offer("B");
+        System.out.println("After offer(A), offer(B): " + list);
+        // Output: [Element, A, B]
+
+        // peek
+        System.out.println("peek(): " + list.peek());
+        // Output: Element
+
+        // poll
+        System.out.println("poll(): " + list.poll());
+        // Output: Element
+        System.out.println("After poll(): " + list);
+        // Output: [A, B]
+
+        // push (stack operation)
+        list.push("Top");
+        System.out.println("After push(\"Top\"): " + list);
+        // Output: [Top, A, B]
+
+        // pop (stack operation)
+        System.out.println("pop(): " + list.pop());
+        // Output: Top
+        System.out.println("After pop(): " + list);
+        // Output: [A, B]
+
+        // Iterator
+        System.out.print("Iterator traversal: ");
+        Iterator<String> it = list.iterator();
+        while(it.hasNext()) {
+            System.out.print(it.next() + " ");
+        }
+        System.out.println();
+        // Output: A B
+
+        // ListIterator
+        System.out.print("ListIterator traversal: ");
+        ListIterator<String> lit = list.listIterator();
+        while(lit.hasNext()) {
+            System.out.print(lit.next() + " ");
+        }
+        System.out.println();
+        // Output: A B
+
+        // clear
+        list.clear();
+        System.out.println("After clear(): " + list);
+        // Output: []
+
+        // isEmpty
+        System.out.println("isEmpty(): " + list.isEmpty());
+        // Output: true
+    }
 }
 ```
+
+---
+
+
 
 **Time Complexity:**
 - Add at beginning/end: O(1)
@@ -765,6 +892,7 @@ Arrays.deepToString(multiArray);
 **Use ArrayDeque when:**
 - You need stack or queue operations
 - You want better performance than LinkedList
+
 
 
 
