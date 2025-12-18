@@ -564,14 +564,93 @@ public class Main {
 
 **Use Case:** LIFO (Last-In-First-Out) operations
 
+
+
+## 🔹 Creation
+
 ```java
 Stack<String> stack = new Stack<>();
+```
 
-stack.push("Element");            // Adds to top
-stack.pop();                       // Removes and returns top
-stack.peek();                      // Returns top without removing
-stack.empty();                     // Checks if empty
-stack.search("Element");          // Returns position from top
+---
+
+## 🔹 Stack Methods
+
+```java
+stack.push("Element");   // Adds element to top
+stack.pop();             // Removes and returns top element
+stack.peek();            // Returns top element without removing
+stack.empty();           // Checks if stack is empty
+stack.search("Element"); // Returns 1-based position from top
+```
+
+---
+
+## 🔹 Important Notes
+
+* `search()` returns:
+
+  * `1` → top of stack
+  * `-1` → element not found
+* `pop()` throws `EmptyStackException` if stack is empty
+
+---
+
+## 🔹 Complete Example with Step-by-Step Output
+
+```java
+import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+
+        // Create Stack
+        Stack<String> stack = new Stack<>();
+        System.out.println("Initial stack: " + stack);
+        // Output: []
+
+        // push
+        stack.push("A");
+        stack.push("B");
+        stack.push("C");
+        System.out.println("After push(A), push(B), push(C): " + stack);
+        // Output: [A, B, C]
+
+        // peek
+        System.out.println("peek(): " + stack.peek());
+        // Output: C
+
+        // pop
+        System.out.println("pop(): " + stack.pop());
+        // Output: C
+        System.out.println("After pop(): " + stack);
+        // Output: [A, B]
+
+        // search
+        System.out.println("search(\"B\"): " + stack.search("B"));
+        // Output: 1
+
+        System.out.println("search(\"A\"): " + stack.search("A"));
+        // Output: 2
+
+        System.out.println("search(\"Z\"): " + stack.search("Z"));
+        // Output: -1
+
+        // empty
+        System.out.println("empty(): " + stack.empty());
+        // Output: false
+
+        // pop remaining elements
+        stack.pop();
+        stack.pop();
+        System.out.println("After popping all elements: " + stack);
+        // Output: []
+
+        // empty again
+        System.out.println("empty(): " + stack.empty());
+        // Output: true
+    }
+}
 ```
 
 ---
@@ -586,76 +665,433 @@ stack.search("Element");          // Returns position from top
 
 **Use Case:** When you need fast add/remove/contains operations and don't care about order
 
+
+## 🔹 Creation
+
 ```java
 HashSet<String> set = new HashSet<>();
+```
 
-// Common Methods
-set.add("Element");               // Returns false if duplicate
-set.remove("Element");            // Removes element
-set.contains("Element");          // Checks existence
-set.size();                        // Returns size
-set.isEmpty();                     // Checks if empty
-set.clear();                       // Removes all
-set.addAll(otherSet);             // Union
-set.retainAll(otherSet);          // Intersection
-set.removeAll(otherSet);          // Difference
+---
 
-// Iteration
+## 🔹 Common Methods
+
+```java
+set.add("Element");        // Adds element (returns false if duplicate)
+set.remove("Element");     // Removes element
+set.contains("Element");   // Checks existence
+set.size();                // Returns number of elements
+set.isEmpty();             // Checks if empty
+set.clear();               // Removes all elements
+```
+
+---
+
+## 🔹 Set Operations
+
+```java
+set.addAll(otherSet);      // Union
+set.retainAll(otherSet);   // Intersection
+set.removeAll(otherSet);   // Difference
+```
+
+---
+
+## 🔹 Iteration
+
+```java
 for(String s : set) {
     System.out.println(s);
 }
 
 set.forEach(System.out::println);
+```
 
-// Convert to Array
+---
+
+## 🔹 Convert to Array
+
+```java
 String[] array = set.toArray(new String[0]);
 ```
 
-**Time Complexity:**
-- Add: O(1)
-- Remove: O(1)
-- Contains: O(1)
+---
+
+## 🔹 Complete Example with Step-by-Step Output
+
+```java
+import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+
+        // Create HashSet
+        HashSet<String> set = new HashSet<>();
+        System.out.println("Initial set: " + set);
+        // Output: []
+
+        // add
+        set.add("Apple");
+        set.add("Banana");
+        set.add("Apple"); // duplicate
+        System.out.println("After adding Apple, Banana, Apple: " + set);
+        // Output: [Apple, Banana] (order may vary)
+
+        // contains
+        System.out.println("contains(\"Apple\"): " + set.contains("Apple"));
+        // Output: true
+
+        // remove
+        set.remove("Banana");
+        System.out.println("After remove(\"Banana\"): " + set);
+        // Output: [Apple]
+
+        // size
+        System.out.println("size(): " + set.size());
+        // Output: 1
+
+        // isEmpty
+        System.out.println("isEmpty(): " + set.isEmpty());
+        // Output: false
+
+        // Another set
+        HashSet<String> otherSet = new HashSet<>();
+        otherSet.add("Apple");
+        otherSet.add("Cherry");
+        System.out.println("otherSet: " + otherSet);
+        // Output: [Apple, Cherry]
+
+        // addAll (Union)
+        HashSet<String> union = new HashSet<>(set);
+        union.addAll(otherSet);
+        System.out.println("Union (addAll): " + union);
+        // Output: [Apple, Cherry]
+
+        // retainAll (Intersection)
+        HashSet<String> intersection = new HashSet<>(set);
+        intersection.retainAll(otherSet);
+        System.out.println("Intersection (retainAll): " + intersection);
+        // Output: [Apple]
+
+        // removeAll (Difference)
+        HashSet<String> difference = new HashSet<>(union);
+        difference.removeAll(set);
+        System.out.println("Difference (removeAll): " + difference);
+        // Output: [Cherry]
+
+        // Iteration using for-each
+        System.out.print("For-each iteration: ");
+        for (String s : union) {
+            System.out.print(s + " ");
+        }
+        System.out.println();
+        // Output: Apple Cherry (order may vary)
+
+        // Java 8 forEach
+        System.out.print("forEach(): ");
+        union.forEach(e -> System.out.print(e + " "));
+        System.out.println();
+        // Output: Apple Cherry (order may vary)
+
+        // Convert to Array
+        String[] array = union.toArray(new String[0]);
+        System.out.println("Converted to array: " + Arrays.toString(array));
+        // Output: [Apple, Cherry]
+
+        // clear
+        union.clear();
+        System.out.println("After clear(): " + union);
+        // Output: []
+
+        // isEmpty again
+        System.out.println("isEmpty(): " + union.isEmpty());
+        // Output: true
+    }
+}
+```
 
 ---
+
+
 
 ### LinkedHashSet
 
 **Use Case:** When you need HashSet features with insertion order maintained
 
+
+## 🔹 Creation
+
 ```java
 LinkedHashSet<String> set = new LinkedHashSet<>();
-
-// Same methods as HashSet
-// Maintains insertion order during iteration
 ```
 
 ---
 
-### TreeSet
-
-**Use Case:** When you need sorted set (natural ordering or custom comparator)
+## 🔹 Common Methods (Same as HashSet)
 
 ```java
-TreeSet<String> set = new TreeSet<>();
-TreeSet<String> customSet = new TreeSet<>(Comparator.reverseOrder());
-
-// Set Methods (same as HashSet)
-set.add("Element");
-
-// Additional SortedSet Methods
-set.first();                       // Returns first (lowest)
-set.last();                        // Returns last (highest)
-set.headSet("Element");           // Returns elements < element
-set.tailSet("Element");           // Returns elements >= element
-set.subSet("A", "Z");             // Returns range [A, Z)
-set.lower("Element");             // Returns greatest element < element
-set.higher("Element");            // Returns least element > element
-set.floor("Element");             // Returns greatest element <= element
-set.ceiling("Element");           // Returns least element >= element
-set.pollFirst();                  // Removes and returns first
-set.pollLast();                   // Removes and returns last
-set.descendingSet();              // Returns reverse order view
+set.add("Element");        // Adds element (false if duplicate)
+set.remove("Element");     // Removes element
+set.contains("Element");   // Checks existence
+set.size();                // Returns size
+set.isEmpty();             // Checks empty
+set.clear();               // Removes all elements
 ```
+
+---
+
+## 🔹 Set Operations
+
+```java
+set.addAll(otherSet);      // Union
+set.retainAll(otherSet);   // Intersection
+set.removeAll(otherSet);   // Difference
+```
+
+---
+
+## 🔹 Iteration (Insertion Order Preserved)
+
+```java
+for(String s : set) {
+    System.out.println(s);
+}
+
+set.forEach(System.out::println);
+```
+
+---
+
+## 🔹 Convert to Array
+
+```java
+String[] array = set.toArray(new String[0]);
+```
+
+---
+
+## 🔹 Complete Example with Step-by-Step Output
+
+```java
+import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+
+        // Create LinkedHashSet
+        LinkedHashSet<String> set = new LinkedHashSet<>();
+        System.out.println("Initial set: " + set);
+        // Output: []
+
+        // add
+        set.add("Apple");
+        set.add("Banana");
+        set.add("Cherry");
+        set.add("Apple"); // duplicate
+        System.out.println("After adding Apple, Banana, Cherry, Apple: " + set);
+        // Output: [Apple, Banana, Cherry]
+
+        // contains
+        System.out.println("contains(\"Banana\"): " + set.contains("Banana"));
+        // Output: true
+
+        // remove
+        set.remove("Banana");
+        System.out.println("After remove(\"Banana\"): " + set);
+        // Output: [Apple, Cherry]
+
+        // size
+        System.out.println("size(): " + set.size());
+        // Output: 2
+
+        // isEmpty
+        System.out.println("isEmpty(): " + set.isEmpty());
+        // Output: false
+
+        // Another set
+        LinkedHashSet<String> otherSet = new LinkedHashSet<>();
+        otherSet.add("Cherry");
+        otherSet.add("Date");
+        System.out.println("otherSet: " + otherSet);
+        // Output: [Cherry, Date]
+
+        // addAll (Union)
+        LinkedHashSet<String> union = new LinkedHashSet<>(set);
+        union.addAll(otherSet);
+        System.out.println("Union (addAll): " + union);
+        // Output: [Apple, Cherry, Date]
+
+        // retainAll (Intersection)
+        LinkedHashSet<String> intersection = new LinkedHashSet<>(set);
+        intersection.retainAll(otherSet);
+        System.out.println("Intersection (retainAll): " + intersection);
+        // Output: [Cherry]
+
+        // removeAll (Difference)
+        LinkedHashSet<String> difference = new LinkedHashSet<>(union);
+        difference.removeAll(set);
+        System.out.println("Difference (removeAll): " + difference);
+        // Output: [Date]
+
+        // Iteration using for-each
+        System.out.print("For-each iteration: ");
+        for (String s : union) {
+            System.out.print(s + " ");
+        }
+        System.out.println();
+        // Output: Apple Cherry Date
+
+        // Java 8 forEach
+        System.out.print("forEach(): ");
+        union.forEach(e -> System.out.print(e + " "));
+        System.out.println();
+        // Output: Apple Cherry Date
+
+        // Convert to Array
+        String[] array = union.toArray(new String[0]);
+        System.out.println("Converted to array: " + Arrays.toString(array));
+        // Output: [Apple, Cherry, Date]
+
+        // clear
+        union.clear();
+        System.out.println("After clear(): " + union);
+        // Output: []
+
+        // isEmpty again
+        System.out.println("isEmpty(): " + union.isEmpty());
+        // Output: true
+    }
+}
+```
+
+---
+
+
+### TreeSet
+
+**Use Case:** When you need sorted set (natural ordering or custom comparator
+
+
+## 🔹 Creation
+
+```java
+TreeSet<String> set = new TreeSet<>();                          // Natural order
+TreeSet<String> customSet = new TreeSet<>(Comparator.reverseOrder()); // Reverse order
+```
+
+---
+
+## 🔹 Common Methods (Same as HashSet)
+
+```java
+set.add("Element");        // Adds element (false if duplicate)
+set.remove("Element");     // Removes element
+set.contains("Element");   // Checks existence
+set.size();                // Returns size
+set.isEmpty();             // Checks empty
+set.clear();               // Removes all elements
+```
+
+---
+
+## 🔹 Additional SortedSet / NavigableSet Methods
+
+```java
+set.first();               // Returns first (lowest) element
+set.last();                // Returns last (highest) element
+set.headSet("Element");    // Returns elements < element
+set.tailSet("Element");    // Returns elements >= element
+set.subSet("A", "Z");      // Returns elements in range [A, Z)
+set.lower("Element");      // Greatest element < element
+set.higher("Element");     // Least element > element
+set.floor("Element");      // Greatest element <= element
+set.ceiling("Element");    // Least element >= element
+set.pollFirst();           // Removes & returns first
+set.pollLast();            // Removes & returns last
+set.descendingSet();       // Returns reverse order view
+```
+
+---
+
+## 🔹 Complete Example with Step-by-Step Output
+
+```java
+import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+
+        // Create TreeSet
+        TreeSet<String> set = new TreeSet<>();
+        System.out.println("Initial TreeSet: " + set);
+        // Output: []
+
+        // add
+        set.add("Apple");
+        set.add("Banana");
+        set.add("Cherry");
+        set.add("Date");
+        System.out.println("After adding elements: " + set);
+        // Output: [Apple, Banana, Cherry, Date] (sorted order)
+
+        // first & last
+        System.out.println("first(): " + set.first());
+        // Output: Apple
+        System.out.println("last(): " + set.last());
+        // Output: Date
+
+        // headSet
+        System.out.println("headSet(\"Cherry\"): " + set.headSet("Cherry"));
+        // Output: [Apple, Banana]
+
+        // tailSet
+        System.out.println("tailSet(\"Cherry\"): " + set.tailSet("Cherry"));
+        // Output: [Cherry, Date]
+
+        // subSet
+        System.out.println("subSet(\"Banana\", \"Date\"): " + set.subSet("Banana", "Date"));
+        // Output: [Banana, Cherry]
+
+        // lower & higher
+        System.out.println("lower(\"Cherry\"): " + set.lower("Cherry"));
+        // Output: Banana
+        System.out.println("higher(\"Cherry\"): " + set.higher("Cherry"));
+        // Output: Date
+
+        // floor & ceiling
+        System.out.println("floor(\"Blueberry\"): " + set.floor("Blueberry"));
+        // Output: Banana
+        System.out.println("ceiling(\"Blueberry\"): " + set.ceiling("Blueberry"));
+        // Output: Cherry
+
+        // pollFirst & pollLast
+        System.out.println("pollFirst(): " + set.pollFirst());
+        // Output: Apple
+        System.out.println("After pollFirst(): " + set);
+        // Output: [Banana, Cherry, Date]
+
+        System.out.println("pollLast(): " + set.pollLast());
+        // Output: Date
+        System.out.println("After pollLast(): " + set);
+        // Output: [Banana, Cherry]
+
+        // descendingSet
+        System.out.println("descendingSet(): " + set.descendingSet());
+        // Output: [Cherry, Banana]
+
+        // clear
+        set.clear();
+        System.out.println("After clear(): " + set);
+        // Output: []
+
+        System.out.println("isEmpty(): " + set.isEmpty());
+        // Output: true
+    }
+}
+```
+
+---
+
 
 **Time Complexity:**
 - Add: O(log n)
@@ -674,21 +1110,95 @@ set.descendingSet();              // Returns reverse order view
 
 **Use Case:** When you need elements processed in priority order (natural or custom)
 
-```java
-PriorityQueue<Integer> pq = new PriorityQueue<>();
-PriorityQueue<Integer> maxHeap = new PriorityQueue<>(Comparator.reverseOrder());
+## 🔹 Creation
 
-// Queue Methods
-pq.offer(10);                     // Adds element, returns false if fails
-pq.add(20);                       // Adds element, throws exception if fails
-pq.poll();                        // Removes and returns head, null if empty
-pq.remove();                      // Removes and returns head, throws if empty
-pq.peek();                        // Returns head without removing, null if empty
-pq.element();                     // Returns head, throws if empty
-pq.size();
-pq.isEmpty();
-pq.clear();
+```java
+PriorityQueue<Integer> pq = new PriorityQueue<>();                     // Min-heap
+PriorityQueue<Integer> maxHeap = new PriorityQueue<>(Comparator.reverseOrder()); // Max-heap
 ```
+
+---
+
+## 🔹 Queue Methods
+
+```java
+pq.offer(10);        // Adds element, returns false if fails
+pq.add(20);          // Adds element, throws exception if fails
+pq.poll();           // Removes & returns head, null if empty
+pq.remove();         // Removes & returns head, throws if empty
+pq.peek();           // Returns head without removing, null if empty
+pq.element();        // Returns head, throws if empty
+pq.size();           // Returns number of elements
+pq.isEmpty();        // Checks empty
+pq.clear();          // Removes all elements
+```
+
+---
+
+## 🔹 Complete Example with Step-by-Step Output
+
+```java
+import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+
+        // Create PriorityQueue (min-heap)
+        PriorityQueue<Integer> pq = new PriorityQueue<>();
+        System.out.println("Initial PriorityQueue: " + pq);
+        // Output: []
+
+        // offer & add
+        pq.offer(30);
+        pq.add(10);
+        pq.add(20);
+        System.out.println("After adding 30, 10, 20: " + pq);
+        // Output: [10, 30, 20] (min-heap, head = 10)
+
+        // peek & element
+        System.out.println("peek(): " + pq.peek());
+        // Output: 10
+        System.out.println("element(): " + pq.element());
+        // Output: 10
+
+        // poll & remove
+        System.out.println("poll(): " + pq.poll());
+        // Output: 10
+        System.out.println("After poll(): " + pq);
+        // Output: [20, 30]
+
+        System.out.println("remove(): " + pq.remove());
+        // Output: 20
+        System.out.println("After remove(): " + pq);
+        // Output: [30]
+
+        // size & isEmpty
+        System.out.println("size(): " + pq.size());
+        // Output: 1
+        System.out.println("isEmpty(): " + pq.isEmpty());
+        // Output: false
+
+        // clear
+        pq.clear();
+        System.out.println("After clear(): " + pq);
+        // Output: []
+        System.out.println("isEmpty(): " + pq.isEmpty());
+        // Output: true
+
+        // Max-heap example
+        PriorityQueue<Integer> maxHeap = new PriorityQueue<>(Comparator.reverseOrder());
+        maxHeap.add(50);
+        maxHeap.add(10);
+        maxHeap.add(30);
+        System.out.println("Max-heap elements: " + maxHeap);
+        // Output: [50, 10, 30] (head = 50)
+        System.out.println("peek(): " + maxHeap.peek());
+        // Output: 50
+    }
+}
+```
+
+---
 
 **Time Complexity:**
 - Offer/Add: O(log n)
@@ -701,28 +1211,120 @@ pq.clear();
 
 **Use Case:** Double-ended queue, faster than LinkedList for both stack and queue operations
 
+
+## 🔹 Creation
+
 ```java
 ArrayDeque<String> deque = new ArrayDeque<>();
-
-// Queue Methods (FIFO)
-deque.offer("Element");           // Adds to end
-deque.poll();                     // Removes from beginning
-deque.peek();                     // Views beginning
-
-// Deque Methods
-deque.offerFirst("First");        // Adds to beginning
-deque.offerLast("Last");          // Adds to end
-deque.pollFirst();                // Removes from beginning
-deque.pollLast();                 // Removes from end
-deque.peekFirst();                // Views beginning
-deque.peekLast();                 // Views end
-
-// Stack Methods (LIFO)
-deque.push("Element");            // Adds to beginning
-deque.pop();                      // Removes from beginning
 ```
 
 ---
+
+## 🔹 Queue Methods (FIFO)
+
+```java
+deque.offer("Element");   // Adds to end
+deque.poll();             // Removes from beginning, returns null if empty
+deque.peek();             // Views beginning, returns null if empty
+```
+
+---
+
+## 🔹 Deque Methods
+
+```java
+deque.offerFirst("First");   // Adds to beginning
+deque.offerLast("Last");     // Adds to end
+deque.pollFirst();           // Removes from beginning
+deque.pollLast();            // Removes from end
+deque.peekFirst();           // Views beginning
+deque.peekLast();            // Views end
+```
+
+---
+
+## 🔹 Stack Methods (LIFO)
+
+```java
+deque.push("Element");       // Adds to beginning
+deque.pop();                 // Removes from beginning
+```
+
+---
+
+## 🔹 Complete Example with Step-by-Step Output
+
+```java
+import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+
+        // Create ArrayDeque
+        ArrayDeque<String> deque = new ArrayDeque<>();
+        System.out.println("Initial deque: " + deque);
+        // Output: []
+
+        // Queue (FIFO) operations
+        deque.offer("A");
+        deque.offer("B");
+        deque.offer("C");
+        System.out.println("After offer(A, B, C): " + deque);
+        // Output: [A, B, C]
+
+        System.out.println("peek(): " + deque.peek());
+        // Output: A
+        System.out.println("poll(): " + deque.poll());
+        // Output: A
+        System.out.println("After poll(): " + deque);
+        // Output: [B, C]
+
+        // Deque operations
+        deque.offerFirst("X");
+        deque.offerLast("Y");
+        System.out.println("After offerFirst(X) and offerLast(Y): " + deque);
+        // Output: [X, B, C, Y]
+
+        System.out.println("peekFirst(): " + deque.peekFirst());
+        // Output: X
+        System.out.println("peekLast(): " + deque.peekLast());
+        // Output: Y
+
+        System.out.println("pollFirst(): " + deque.pollFirst());
+        // Output: X
+        System.out.println("pollLast(): " + deque.pollLast());
+        // Output: Y
+        System.out.println("After pollFirst & pollLast: " + deque);
+        // Output: [B, C]
+
+        // Stack (LIFO) operations
+        deque.push("M");
+        deque.push("N");
+        System.out.println("After push(M, N): " + deque);
+        // Output: [N, M, B, C]
+
+        System.out.println("pop(): " + deque.pop());
+        // Output: N
+        System.out.println("After pop(): " + deque);
+        // Output: [M, B, C]
+
+        // Size and isEmpty
+        System.out.println("size(): " + deque.size());
+        // Output: 3
+        System.out.println("isEmpty(): " + deque.isEmpty());
+        // Output: false
+
+        // Clear
+        deque.clear();
+        System.out.println("After clear(): " + deque);
+        // Output: []
+    }
+}
+```
+
+---
+
+
 
 ## Map Interface
 
@@ -735,47 +1337,180 @@ deque.pop();                      // Removes from beginning
 
 **Use Case:** When you need fast key-value lookups and don't care about order
 
+
+## 🔹 Creation
+
 ```java
 HashMap<String, Integer> map = new HashMap<>();
+```
 
-// Common Methods
-map.put("Key", 100);              // Adds/updates entry
-map.get("Key");                   // Returns value, null if not found
-map.getOrDefault("Key", 0);       // Returns value or default
-map.remove("Key");                // Removes entry
-map.containsKey("Key");           // Checks key existence
-map.containsValue(100);           // Checks value existence
-map.size();
-map.isEmpty();
-map.clear();
+---
 
-// Bulk Operations
-map.putAll(otherMap);
-map.putIfAbsent("Key", 100);     // Only if key absent
+## 🔹 Common Methods
 
-// Java 8+ Methods
-map.computeIfAbsent("Key", k -> 100);
-map.computeIfPresent("Key", (k, v) -> v + 1);
+```java
+map.put("Key", 100);             // Adds/updates entry
+map.get("Key");                  // Returns value (null if not found)
+map.getOrDefault("Key", 0);      // Returns value or default
+map.remove("Key");               // Removes entry
+map.containsKey("Key");          // Checks if key exists
+map.containsValue(100);          // Checks if value exists
+map.size();                      // Number of entries
+map.isEmpty();                   // Checks if empty
+map.clear();                      // Removes all entries
+```
+
+---
+
+## 🔹 Bulk Operations
+
+```java
+map.putAll(otherMap);             // Copies all entries
+map.putIfAbsent("Key", 100);      // Only adds if key absent
+```
+
+---
+
+## 🔹 Java 8+ Methods
+
+```java
+map.computeIfAbsent("Key", k -> 100);          // Computes only if absent
+map.computeIfPresent("Key", (k, v) -> v + 1); // Computes only if present
 map.compute("Key", (k, v) -> (v == null) ? 1 : v + 1);
-map.merge("Key", 1, Integer::sum);
-map.replace("Key", 100);
-map.replace("Key", 100, 200);    // Only if current value is 100
+map.merge("Key", 1, Integer::sum);            // Merges value with existing
+map.replace("Key", 100);                      // Replaces value for key
+map.replace("Key", 100, 200);                // Replace only if current value matches
+```
 
-// Iteration
+---
+
+## 🔹 Iteration
+
+```java
 for(String key : map.keySet()) {
-    System.out.println(key);
+    System.out.println(key);                  // Iterates over keys
 }
 
 for(Integer value : map.values()) {
-    System.out.println(value);
+    System.out.println(value);                // Iterates over values
 }
 
 for(Map.Entry<String, Integer> entry : map.entrySet()) {
-    System.out.println(entry.getKey() + ": " + entry.getValue());
+    System.out.println(entry.getKey() + ": " + entry.getValue()); // Iterates entries
 }
 
-map.forEach((k, v) -> System.out.println(k + ": " + v));
+map.forEach((k, v) -> System.out.println(k + ": " + v));           // Java 8+
 ```
+
+---
+
+## 🔹 Complete Example with Step-by-Step Output
+
+```java
+import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+
+        // Create HashMap
+        HashMap<String, Integer> map = new HashMap<>();
+        System.out.println("Initial map: " + map);
+        // Output: {}
+
+        // put
+        map.put("A", 10);
+        map.put("B", 20);
+        map.put("C", 30);
+        System.out.println("After put A,B,C: " + map);
+        // Output: {A=10, B=20, C=30} (order may vary)
+
+        // get & getOrDefault
+        System.out.println("get(\"A\"): " + map.get("A"));
+        // Output: 10
+        System.out.println("getOrDefault(\"D\", 0): " + map.getOrDefault("D", 0));
+        // Output: 0
+
+        // containsKey & containsValue
+        System.out.println("containsKey(\"B\"): " + map.containsKey("B"));
+        // Output: true
+        System.out.println("containsValue(50): " + map.containsValue(50));
+        // Output: false
+
+        // remove
+        map.remove("C");
+        System.out.println("After remove(\"C\"): " + map);
+        // Output: {A=10, B=20}
+
+        // size & isEmpty
+        System.out.println("size(): " + map.size());
+        // Output: 2
+        System.out.println("isEmpty(): " + map.isEmpty());
+        // Output: false
+
+        // putIfAbsent
+        map.putIfAbsent("B", 50);
+        map.putIfAbsent("D", 40);
+        System.out.println("After putIfAbsent: " + map);
+        // Output: {A=10, B=20, D=40}
+
+        // computeIfAbsent
+        map.computeIfAbsent("E", k -> 100);
+        System.out.println("After computeIfAbsent(\"E\"): " + map);
+        // Output: {A=10, B=20, D=40, E=100}
+
+        // computeIfPresent
+        map.computeIfPresent("B", (k, v) -> v + 5);
+        System.out.println("After computeIfPresent(\"B\"): " + map);
+        // Output: {A=10, B=25, D=40, E=100}
+
+        // compute
+        map.compute("A", (k, v) -> v * 2);
+        System.out.println("After compute(\"A\"): " + map);
+        // Output: {A=20, B=25, D=40, E=100}
+
+        // merge
+        map.merge("D", 10, Integer::sum);
+        System.out.println("After merge(\"D\",10): " + map);
+        // Output: {A=20, B=25, D=50, E=100}
+
+        // replace
+        map.replace("E", 200);
+        map.replace("B", 25, 30);
+        System.out.println("After replace operations: " + map);
+        // Output: {A=20, B=30, D=50, E=200}
+
+        // Iteration
+        System.out.print("Keys: ");
+        for(String key : map.keySet()) System.out.print(key + " ");
+        System.out.println();
+        // Output: Keys: A B D E
+
+        System.out.print("Values: ");
+        for(Integer value : map.values()) System.out.print(value + " ");
+        System.out.println();
+        // Output: Values: 20 30 50 200
+
+        System.out.println("Entries:");
+        for(Map.Entry<String,Integer> entry : map.entrySet())
+            System.out.println(entry.getKey() + ": " + entry.getValue());
+        // Output: A:20 B:30 D:50 E:200
+
+        System.out.println("forEach:");
+        map.forEach((k,v) -> System.out.println(k + ": " + v));
+        // Output: A:20 B:30 D:50 E:200
+
+        // clear
+        map.clear();
+        System.out.println("After clear(): " + map);
+        // Output: {}
+        System.out.println("isEmpty(): " + map.isEmpty());
+        // Output: true
+    }
+}
+```
+
+---
+
 
 **Time Complexity:**
 - Put: O(1)
@@ -789,13 +1524,109 @@ map.forEach((k, v) -> System.out.println(k + ": " + v));
 
 **Use Case:** When you need HashMap features with insertion/access order maintained
 
-```java
-LinkedHashMap<String, Integer> map = new LinkedHashMap<>();
-// Insertion order
-LinkedHashMap<String, Integer> accessOrderMap = new LinkedHashMap<>(16, 0.75f, true);
-// Access order (useful for LRU cache)
 
-// Same methods as HashMap
+## 🔹 Creation
+
+```java
+// Insertion order (default)
+LinkedHashMap<String, Integer> map = new LinkedHashMap<>();
+
+// Access order (true): useful for LRU cache
+LinkedHashMap<String, Integer> accessOrderMap = new LinkedHashMap<>(16, 0.75f, true);
+```
+
+---
+
+## 🔹 Methods (Same as HashMap)
+
+```java
+map.put("Key", 100);              // Adds/updates entry
+map.get("Key");                   // Returns value, null if not found
+map.getOrDefault("Key", 0);       // Returns value or default
+map.remove("Key");                // Removes entry
+map.containsKey("Key");           // Checks key existence
+map.containsValue(100);           // Checks value existence
+map.size();
+map.isEmpty();
+map.clear();
+map.putAll(otherMap);
+map.putIfAbsent("Key", 100);     
+map.computeIfAbsent("Key", k -> 100);
+map.computeIfPresent("Key", (k, v) -> v + 1);
+map.compute("Key", (k, v) -> (v == null) ? 1 : v + 1);
+map.merge("Key", 1, Integer::sum);
+map.replace("Key", 100);
+map.replace("Key", 100, 200);
+
+// Iteration
+for(String key : map.keySet()) System.out.println(key);
+for(Integer value : map.values()) System.out.println(value);
+for(Map.Entry<String, Integer> entry : map.entrySet())
+    System.out.println(entry.getKey() + ": " + entry.getValue());
+map.forEach((k, v) -> System.out.println(k + ": " + v));
+```
+
+---
+
+## 🔹 Complete Example with Step-by-Step Output
+
+```java
+import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+
+        // Create LinkedHashMap (insertion order)
+        LinkedHashMap<String, Integer> map = new LinkedHashMap<>();
+        map.put("A", 10);
+        map.put("B", 20);
+        map.put("C", 30);
+        System.out.println("Initial map: " + map);
+        // Output: {A=10, B=20, C=30} (insertion order)
+
+        // Accessing an element does NOT change order in default map
+        map.get("B");
+        System.out.println("After get(\"B\"): " + map);
+        // Output: {A=10, B=20, C=30}
+
+        // Using access-order map (LRU)
+        LinkedHashMap<String, Integer> lruMap = new LinkedHashMap<>(16, 0.75f, true);
+        lruMap.put("X", 100);
+        lruMap.put("Y", 200);
+        lruMap.put("Z", 300);
+        System.out.println("Access-order map: " + lruMap);
+        // Output: {X=100, Y=200, Z=300}
+
+        // Access element to move it to end
+        lruMap.get("Y");
+        System.out.println("After get(\"Y\"): " + lruMap);
+        // Output: {X=100, Z=300, Y=200} (Y moved to end)
+
+        // Iteration
+        System.out.println("Keys:");
+        for(String key : map.keySet()) System.out.print(key + " ");
+        System.out.println();
+        // Output: Keys: A B C
+
+        System.out.println("Values:");
+        for(Integer val : map.values()) System.out.print(val + " ");
+        System.out.println();
+        // Output: Values: 10 20 30
+
+        System.out.println("Entries:");
+        for(Map.Entry<String,Integer> entry : map.entrySet())
+            System.out.println(entry.getKey() + ": " + entry.getValue());
+        // Output: 
+        // A: 10
+        // B: 20
+        // C: 30
+
+        // Clear
+        map.clear();
+        System.out.println("After clear(): " + map);
+        // Output: {}
+    }
+}
 ```
 
 ---
@@ -804,29 +1635,128 @@ LinkedHashMap<String, Integer> accessOrderMap = new LinkedHashMap<>(16, 0.75f, t
 
 **Use Case:** When you need sorted map (by keys)
 
+
+## 🔹 Creation
+
 ```java
+// Natural order (ascending)
 TreeMap<String, Integer> map = new TreeMap<>();
+
+// Reverse order
 TreeMap<String, Integer> reverseMap = new TreeMap<>(Comparator.reverseOrder());
-
-// Map Methods (same as HashMap)
-map.put("Key", 100);
-
-// NavigableMap Methods
-map.firstKey();                   // Returns first (lowest) key
-map.lastKey();                    // Returns last (highest) key
-map.firstEntry();                 // Returns first entry
-map.lastEntry();                  // Returns last entry
-map.lowerKey("Key");              // Returns greatest key < key
-map.higherKey("Key");             // Returns least key > key
-map.floorKey("Key");              // Returns greatest key <= key
-map.ceilingKey("Key");            // Returns least key >= key
-map.pollFirstEntry();             // Removes and returns first
-map.pollLastEntry();              // Removes and returns last
-map.headMap("Key");               // Returns keys < key
-map.tailMap("Key");               // Returns keys >= key
-map.subMap("A", "Z");             // Returns range [A, Z)
-map.descendingMap();              // Returns reverse order view
 ```
+
+---
+
+## 🔹 Map Methods (Same as HashMap)
+
+```java
+map.put("Key", 100);             // Adds/updates entry
+map.get("Key");                  // Returns value, null if not found
+map.getOrDefault("Key", 0);      // Returns value or default
+map.remove("Key");               // Removes entry
+map.containsKey("Key");          // Checks key existence
+map.containsValue(100);          // Checks value existence
+map.size();
+map.isEmpty();
+map.clear();
+map.putAll(otherMap);
+map.putIfAbsent("Key", 100);     
+map.computeIfAbsent("Key", k -> 100);
+map.computeIfPresent("Key", (k, v) -> v + 1);
+map.compute("Key", (k, v) -> (v == null) ? 1 : v + 1);
+map.merge("Key", 1, Integer::sum);
+map.replace("Key", 100);
+map.replace("Key", 100, 200);
+```
+
+---
+
+## 🔹 NavigableMap Methods
+
+```java
+map.firstKey();                  // Returns first (lowest) key
+map.lastKey();                   // Returns last (highest) key
+map.firstEntry();                // Returns first entry
+map.lastEntry();                 // Returns last entry
+map.lowerKey("Key");             // Greatest key < given key
+map.higherKey("Key");            // Least key > given key
+map.floorKey("Key");             // Greatest key <= given key
+map.ceilingKey("Key");           // Least key >= given key
+map.pollFirstEntry();            // Removes & returns first entry
+map.pollLastEntry();             // Removes & returns last entry
+map.headMap("Key");              // Returns keys < given key
+map.tailMap("Key");              // Returns keys >= given key
+map.subMap("A", "Z");            // Returns keys in [A, Z)
+map.descendingMap();             // Returns reverse order view
+```
+
+---
+
+## 🔹 Complete Example with Step-by-Step Output
+
+```java
+import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+
+        // Create TreeMap
+        TreeMap<String, Integer> map = new TreeMap<>();
+        map.put("C", 30);
+        map.put("A", 10);
+        map.put("B", 20);
+        System.out.println("Initial TreeMap: " + map);
+        // Output: {A=10, B=20, C=30} (sorted by key)
+
+        // firstKey & lastKey
+        System.out.println("firstKey(): " + map.firstKey());
+        // Output: A
+        System.out.println("lastKey(): " + map.lastKey());
+        // Output: C
+
+        // firstEntry & lastEntry
+        System.out.println("firstEntry(): " + map.firstEntry());
+        // Output: A=10
+        System.out.println("lastEntry(): " + map.lastEntry());
+        // Output: C=30
+
+        // lowerKey, higherKey, floorKey, ceilingKey
+        System.out.println("lowerKey(\"B\"): " + map.lowerKey("B"));
+        // Output: A
+        System.out.println("higherKey(\"B\"): " + map.higherKey("B"));
+        // Output: C
+        System.out.println("floorKey(\"B\"): " + map.floorKey("B"));
+        // Output: B
+        System.out.println("ceilingKey(\"B\"): " + map.ceilingKey("B"));
+        // Output: B
+
+        // pollFirstEntry & pollLastEntry
+        System.out.println("pollFirstEntry(): " + map.pollFirstEntry());
+        // Output: A=10
+        System.out.println("pollLastEntry(): " + map.pollLastEntry());
+        // Output: C=30
+        System.out.println("After polling: " + map);
+        // Output: {B=20}
+
+        // headMap, tailMap, subMap
+        map.put("A", 10);
+        map.put("C", 30);
+        System.out.println("map.headMap(\"B\"): " + map.headMap("B"));
+        // Output: {A=10}
+        System.out.println("map.tailMap(\"B\"): " + map.tailMap("B"));
+        // Output: {B=20, C=30}
+        System.out.println("map.subMap(\"A\", \"C\"): " + map.subMap("A", "C"));
+        // Output: {A=10, B=20}
+
+        // descendingMap
+        System.out.println("map.descendingMap(): " + map.descendingMap());
+        // Output: {C=30, B=20, A=10}
+    }
+}
+```
+
+---
 
 **Time Complexity:**
 - Put: O(log n)
@@ -839,13 +1769,122 @@ map.descendingMap();              // Returns reverse order view
 
 **Use Case:** Legacy thread-safe map (prefer ConcurrentHashMap)
 
+
+## 🔹 Creation
+
 ```java
 Hashtable<String, Integer> table = new Hashtable<>();
-
-// Same methods as HashMap
-// Does not allow null keys or values
-// All methods are synchronized
 ```
+
+---
+
+## 🔹 Methods (Same as HashMap)
+
+```java
+table.put("Key", 100);              // Adds/updates entry
+table.get("Key");                   // Returns value, null if not found
+table.remove("Key");                // Removes entry
+table.containsKey("Key");           // Checks key existence
+table.containsValue(100);           // Checks value existence
+table.size();
+table.isEmpty();
+table.clear();
+table.putAll(otherTable);
+table.putIfAbsent("Key", 100);      // Adds only if key absent
+
+// Iteration
+for(String key : table.keySet()) System.out.println(key);
+for(Integer value : table.values()) System.out.println(value);
+for(Map.Entry<String, Integer> entry : table.entrySet())
+    System.out.println(entry.getKey() + ": " + entry.getValue());
+table.forEach((k,v) -> System.out.println(k + ": " + v));
+```
+
+---
+
+## 🔹 Complete Example with Step-by-Step Output
+
+```java
+import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+
+        // Create Hashtable
+        Hashtable<String, Integer> table = new Hashtable<>();
+        System.out.println("Initial table: " + table);
+        // Output: {}
+
+        // put
+        table.put("A", 10);
+        table.put("B", 20);
+        table.put("C", 30);
+        System.out.println("After put A,B,C: " + table);
+        // Output: {A=10, B=20, C=30} (order not guaranteed)
+
+        // get
+        System.out.println("get(\"B\"): " + table.get("B"));
+        // Output: 20
+
+        // containsKey & containsValue
+        System.out.println("containsKey(\"C\"): " + table.containsKey("C"));
+        // Output: true
+        System.out.println("containsValue(50): " + table.containsValue(50));
+        // Output: false
+
+        // remove
+        table.remove("A");
+        System.out.println("After remove(\"A\"): " + table);
+        // Output: {B=20, C=30}
+
+        // size & isEmpty
+        System.out.println("size(): " + table.size());
+        // Output: 2
+        System.out.println("isEmpty(): " + table.isEmpty());
+        // Output: false
+
+        // putIfAbsent
+        table.putIfAbsent("B", 50);  // ignored, B exists
+        table.putIfAbsent("D", 40);  // added
+        System.out.println("After putIfAbsent: " + table);
+        // Output: {B=20, C=30, D=40}
+
+        // Iteration
+        System.out.println("Keys:");
+        for(String key : table.keySet()) System.out.print(key + " ");
+        System.out.println();
+        // Output: Keys: B C D
+
+        System.out.println("Values:");
+        for(Integer value : table.values()) System.out.print(value + " ");
+        System.out.println();
+        // Output: Values: 20 30 40
+
+        System.out.println("Entries:");
+        for(Map.Entry<String,Integer> entry : table.entrySet())
+            System.out.println(entry.getKey() + ": " + entry.getValue());
+        // Output:
+        // B: 20
+        // C: 30
+        // D: 40
+
+        System.out.println("forEach:");
+        table.forEach((k,v) -> System.out.println(k + ": " + v));
+        // Output:
+        // B: 20
+        // C: 30
+        // D: 40
+
+        // clear
+        table.clear();
+        System.out.println("After clear(): " + table);
+        // Output: {}
+        System.out.println("isEmpty(): " + table.isEmpty());
+        // Output: true
+    }
+}
+```
+
 
 ---
 
@@ -853,114 +1892,366 @@ Hashtable<String, Integer> table = new Hashtable<>();
 
 ### Collections Class
 
+
+### 1️⃣ Sorting
+
 ```java
-// Sorting
-Collections.sort(list);
-Collections.sort(list, Comparator.reverseOrder());
+Collections.sort(list);                      // Ascending order
+Collections.sort(list, Comparator.reverseOrder());  // Descending order
+```
 
-// Searching (requires sorted list)
-Collections.binarySearch(list, "Element");
+### 2️⃣ Searching
 
-// Shuffling
-Collections.shuffle(list);
+```java
+Collections.binarySearch(list, "Element");  // Requires sorted list
+```
 
-// Reversing
-Collections.reverse(list);
+### 3️⃣ Shuffling
 
-// Filling
-Collections.fill(list, "Default");
+```java
+Collections.shuffle(list);                   // Randomizes elements
+```
 
-// Copying
-Collections.copy(destList, srcList);
+### 4️⃣ Reversing
 
-// Min/Max
-Collections.min(list);
-Collections.max(list);
+```java
+Collections.reverse(list);                   // Reverses the list
+```
 
-// Frequency
-Collections.frequency(list, "Element");
+### 5️⃣ Filling
 
-// Disjoint Check
-Collections.disjoint(list1, list2);
+```java
+Collections.fill(list, "Default");          // Replaces all elements
+```
 
-// Synchronization
+### 6️⃣ Copying
+
+```java
+Collections.copy(destList, srcList);        // Copies src to dest
+```
+
+### 7️⃣ Min / Max
+
+```java
+Collections.min(list);                       // Smallest element
+Collections.max(list);                       // Largest element
+```
+
+### 8️⃣ Frequency
+
+```java
+Collections.frequency(list, "Element");     // Count occurrences
+```
+
+### 9️⃣ Disjoint Check
+
+```java
+Collections.disjoint(list1, list2);         // True if no common elements
+```
+
+---
+
+## 🔹 Synchronization
+
+```java
 List<String> syncList = Collections.synchronizedList(new ArrayList<>());
 Set<String> syncSet = Collections.synchronizedSet(new HashSet<>());
 Map<String, Integer> syncMap = Collections.synchronizedMap(new HashMap<>());
+```
 
-// Unmodifiable
+* Ensures thread-safe access to collections
+* Useful in multithreaded programs
+
+---
+
+## 🔹 Unmodifiable Collections
+
+```java
 List<String> unmodList = Collections.unmodifiableList(list);
 Set<String> unmodSet = Collections.unmodifiableSet(set);
 Map<String, Integer> unmodMap = Collections.unmodifiableMap(map);
+```
 
-// Empty Collections
+* Throws `UnsupportedOperationException` on modification
+
+---
+
+## 🔹 Empty Collections
+
+```java
 Collections.emptyList();
 Collections.emptySet();
 Collections.emptyMap();
-
-// Singleton Collections
-Collections.singleton("Element");
-Collections.singletonList("Element");
-Collections.singletonMap("Key", "Value");
-
-// Adding Elements
-Collections.addAll(list, "A", "B", "C");
-
-// Rotating
-Collections.rotate(list, 2);
-
-// Replacing
-Collections.replaceAll(list, "Old", "New");
 ```
+
+* Returns immutable empty collections
+* Useful for safe defaults
+
+---
+
+## 🔹 Singleton Collections
+
+```java
+Collections.singleton("Element");          // Single object set
+Collections.singletonList("Element");      // Single object list
+Collections.singletonMap("Key", "Value");  // Single key-value map
+```
+
+* Immutable collections with a single element
+
+---
+
+## 🔹 Adding Elements
+
+```java
+Collections.addAll(list, "A", "B", "C");   // Adds multiple elements
+```
+
+---
+
+## 🔹 Rotating
+
+```java
+Collections.rotate(list, 2);               // Rotates elements by n positions
+```
+
+---
+
+## 🔹 Replacing
+
+```java
+Collections.replaceAll(list, "Old", "New"); // Replaces all occurrences
+```
+
+---
+
+## 🔹 Complete Example with Step-by-Step Output
+
+```java
+import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+
+        List<String> list = new ArrayList<>();
+        Collections.addAll(list, "B", "A", "C", "A");
+        System.out.println("Initial list: " + list);
+        // Output: [B, A, C, A]
+
+        // Sorting
+        Collections.sort(list);
+        System.out.println("After sort: " + list);
+        // Output: [A, A, B, C]
+
+        Collections.sort(list, Comparator.reverseOrder());
+        System.out.println("After reverse sort: " + list);
+        // Output: [C, B, A, A]
+
+        // Searching (binary search requires sorted list)
+        Collections.sort(list);
+        int index = Collections.binarySearch(list, "B");
+        System.out.println("Index of B: " + index);
+        // Output: 2
+
+        // Shuffling
+        Collections.shuffle(list);
+        System.out.println("After shuffle: " + list);
+        // Output: [A, C, A, B] (example)
+
+        // Reversing
+        Collections.reverse(list);
+        System.out.println("After reverse: " + list);
+        // Output: [B, A, C, A]
+
+        // Filling
+        Collections.fill(list, "X");
+        System.out.println("After fill: " + list);
+        // Output: [X, X, X, X]
+
+        // Frequency
+        Collections.addAll(list, "Y", "X", "Z", "X");
+        int freq = Collections.frequency(list, "X");
+        System.out.println("Frequency of X: " + freq);
+        // Output: 3
+
+        // Min / Max
+        System.out.println("Min: " + Collections.min(list));
+        // Output: X
+        System.out.println("Max: " + Collections.max(list));
+        // Output: Z
+
+        // Rotating
+        Collections.rotate(list, 2);
+        System.out.println("After rotate by 2: " + list);
+        // Output: [X, X, X, Z, Y, X] (example)
+
+        // Replacing
+        Collections.replaceAll(list, "X", "M");
+        System.out.println("After replaceAll X -> M: " + list);
+        // Output: [M, M, M, Z, Y, M]
+    }
+}
+```
+
+
 
 ---
 
 ### Arrays Class
 
+
+
+### 1️⃣ Sorting
+
 ```java
-// Sorting
-Arrays.sort(array);
-Arrays.sort(array, Comparator.reverseOrder());
+Arrays.sort(array);                       // Ascending order
+Arrays.sort(array, Comparator.reverseOrder());  // Descending order (Objects)
+```
 
-// Searching (requires sorted array)
-Arrays.binarySearch(array, "Element");
+### 2️⃣ Searching
 
-// Copying
+```java
+Arrays.binarySearch(array, "Element");   // Requires sorted array
+```
+
+### 3️⃣ Copying
+
+```java
 int[] copy = Arrays.copyOf(array, newLength);
 int[] rangeCopy = Arrays.copyOfRange(array, from, to);
+```
 
-// Filling
-Arrays.fill(array, "Default");
+### 4️⃣ Filling
 
-// Comparing
-Arrays.equals(array1, array2);
-Arrays.deepEquals(array1, array2);  // For multidimensional
+```java
+Arrays.fill(array, "Default");           // Fills array with value
+```
 
-// Converting
-List<String> list = Arrays.asList("A", "B", "C");
+### 5️⃣ Comparing
 
-// Streaming
+```java
+Arrays.equals(array1, array2);           // True if arrays are equal
+Arrays.deepEquals(array1, array2);       // For multidimensional arrays
+```
+
+### 6️⃣ Converting
+
+```java
+List<String> list = Arrays.asList("A", "B", "C");  // Fixed-size list
+```
+
+### 7️⃣ Streaming
+
+```java
 Arrays.stream(array).forEach(System.out::println);
+```
 
-// Parallel Sorting (faster for large arrays)
-Arrays.parallelSort(array);
+### 8️⃣ Parallel Sorting
 
-// toString
-Arrays.toString(array);
-Arrays.deepToString(multiArray);
+```java
+Arrays.parallelSort(array);               // Faster for large arrays
+```
+
+### 9️⃣ toString / deepToString
+
+```java
+Arrays.toString(array);                   // Converts array to string
+Arrays.deepToString(multiArray);         // Converts multi-dimensional array to string
 ```
 
 ---
 
+## 🔹 Complete Example with Step-by-Step Output
+
+```java
+import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+
+        String[] array = {"B", "A", "C", "A"};
+        System.out.println("Initial array: " + Arrays.toString(array));
+        // Output: [B, A, C, A]
+
+        // Sorting
+        Arrays.sort(array);
+        System.out.println("After sort: " + Arrays.toString(array));
+        // Output: [A, A, B, C]
+
+        Arrays.sort(array, Comparator.reverseOrder());
+        System.out.println("After reverse sort: " + Arrays.toString(array));
+        // Output: [C, B, A, A]
+
+        // Searching (binary search requires sorted array)
+        Arrays.sort(array);
+        int index = Arrays.binarySearch(array, "B");
+        System.out.println("Index of B: " + index);
+        // Output: 2
+
+        // Copying
+        String[] copy = Arrays.copyOf(array, array.length);
+        System.out.println("Copy of array: " + Arrays.toString(copy));
+        // Output: [A, A, B, C]
+
+        String[] rangeCopy = Arrays.copyOfRange(array, 1, 3);
+        System.out.println("Range copy (1,3): " + Arrays.toString(rangeCopy));
+        // Output: [A, B]
+
+        // Filling
+        Arrays.fill(array, "X");
+        System.out.println("After fill: " + Arrays.toString(array));
+        // Output: [X, X, X, X]
+
+        // Comparing
+        String[] arr1 = {"A", "B"};
+        String[] arr2 = {"A", "B"};
+        System.out.println("Arrays.equals: " + Arrays.equals(arr1, arr2));
+        // Output: true
+
+        String[][] multiArr1 = {{"A","B"}, {"C"}};
+        String[][] multiArr2 = {{"A","B"}, {"C"}};
+        System.out.println("Arrays.deepEquals: " + Arrays.deepEquals(multiArr1, multiArr2));
+        // Output: true
+
+        // Converting to List
+        List<String> list = Arrays.asList("A", "B", "C");
+        System.out.println("As List: " + list);
+        // Output: [A, B, C]
+
+        // Streaming
+        System.out.print("Stream: ");
+        Arrays.stream(array).forEach(e -> System.out.print(e + " "));
+        System.out.println();
+        // Output: Stream: X X X X
+
+        // Parallel Sorting
+        String[] largeArray = {"Z","Y","X"};
+        Arrays.parallelSort(largeArray);
+        System.out.println("Parallel sorted: " + Arrays.toString(largeArray));
+        // Output: [X, Y, Z]
+
+        // toString / deepToString
+        String[][] multiArray = {{"A","B"},{"C","D"}};
+        System.out.println("deepToString: " + Arrays.deepToString(multiArray));
+        // Output: [[A, B], [C, D]]
+    }
+}
+```
+
+
+
+---
+
+
 ## Performance Comparison
 
-| Operation | ArrayList | LinkedList | HashSet | TreeSet | HashMap | TreeMap |
-|-----------|-----------|------------|---------|---------|---------|---------|
-| Add | O(1)* | O(1) | O(1) | O(log n) | O(1) | O(log n) |
-| Remove | O(n) | O(1)** | O(1) | O(log n) | O(1) | O(log n) |
-| Get | O(1) | O(n) | N/A | N/A | O(1) | O(log n) |
-| Contains | O(n) | O(n) | O(1) | O(log n) | O(1) | O(log n) |
-| Iteration | Fast | Fast | Fast | Fast | Fast | Fast |
+| Operation | ArrayList | LinkedList | Vector | Stack | HashSet | LinkedHashSet | TreeSet  | HashMap | LinkedHashMap | TreeMap  | Hashtable | PriorityQueue | ArrayDeque |      |
+| --------- | --------- | ---------- | ------ | ----- | ------- | ------------- | -------- | ------- | ------------- | -------- | --------- | ------------- | ---------- | ---- |
+| Add       | O(1)*     | O(1)**     | O(1)*  | O(1)  | O(1)    | O(1)          | O(log n) | O(1)    | O(1)          | O(log n) | O(1)      | O(log n)      | O(log n)   | O(1) |
+| Remove    | O(n)      | O(1)**     | O(n)   | O(n)  | O(1)    | O(1)          | O(log n) | O(1)    | O(1)          | O(log n) | O(1)      | O(log n)      | O(log n)   | O(1) |
+| Get       | O(1)      | O(n)       | O(1)   | O(n)  | N/A     | N/A           | N/A      | O(1)    | O(1)          | O(log n) | O(1)      | O(1)          | O(n)       | O(1) |
+| Contains  | O(n)      | O(n)       | O(n)   | O(n)  | O(1)    | O(1)          | O(log n) | O(1)    | O(1)          | O(log n) | O(1)      | O(n)          | O(n)       | O(n) |
+| Iteration | Fast      | Fast       | Fast   | Fast  | Fast    | Fast          | Fast     | Fast    | Fast          | Fast     | Fast      | Fast          | Fast       |      |
 
 *Amortized, **if node is known
 
@@ -968,43 +2259,83 @@ Arrays.deepToString(multiArray);
 
 ## Choosing the Right Collection
 
-**Use ArrayList when:**
-- You need fast random access
-- You iterate more than you insert/delete
-- You mostly add at the end
+**ArrayList**
 
-**Use LinkedList when:**
-- You frequently insert/delete at beginning or middle
-- You implement a queue or deque
-- Random access is rare
+* Fast random access
+* Iterate more than insert/delete
+* Mostly add at the end
 
-**Use HashSet when:**
-- You need unique elements
-- Order doesn't matter
-- Fast add/remove/contains is critical
+**LinkedList**
 
-**Use TreeSet when:**
-- You need unique elements in sorted order
-- You need range operations
+* Frequent insert/delete at beginning or middle
+* Implementing queue or deque
+* Random access is rare
 
-**Use HashMap when:**
-- You need key-value pairs
-- Order doesn't matter
-- Fast lookup is critical
+**Vector**
 
-**Use TreeMap when:**
-- You need key-value pairs in sorted key order
-- You need range operations on keys
+* Similar to `ArrayList` but synchronized (legacy)
+* Use in multithreaded legacy code
 
-**Use PriorityQueue when:**
-- You need elements processed by priority
-- You're implementing heap-based algorithms
+**Stack**
 
-**Use ArrayDeque when:**
-- You need stack or queue operations
-- You want better performance than LinkedList
+* LIFO operations
+* Legacy, use `ArrayDeque` for modern implementation
 
+**HashSet**
 
+* Unique elements
+* Order doesn't matter
+* Fast add/remove/contains
 
+**LinkedHashSet**
 
+* Unique elements
+* Maintains insertion order
+* Fast add/remove/contains
+
+**TreeSet**
+
+* Unique elements in sorted order
+* Range operations available
+
+**HashMap**
+
+* Key-value pairs
+* Order doesn't matter
+* Fast lookup
+
+**LinkedHashMap**
+
+* Key-value pairs
+* Maintains insertion order
+* Fast lookup
+
+**TreeMap**
+
+* Key-value pairs in sorted key order
+* Range operations available
+
+**Hashtable**
+
+* Legacy synchronized key-value map
+* No null keys/values
+* Thread-safe
+
+**PriorityQueue**
+
+* Elements processed by priority
+* Implements min/max heap
+* Heap-based algorithms
+
+**ArrayDeque**
+
+* Stack or queue operations
+* Better performance than `LinkedList`
+
+**Concurrent Collections** (Optional, for multithreading)
+
+* `ConcurrentHashMap`, `CopyOnWriteArrayList`
+* Thread-safe without blocking
+
+---
 
