@@ -4116,6 +4116,1011 @@ NodeInfo postorder(TreeNode node) {
 
 ---
 
-This completes a comprehensive overview of Striver's SDE Sheet with 133+ problems covering Arrays, Linked Lists, Stacks, Queues, Strings, Binary Trees, BST, Recursion, Backtracking, Greedy, Heaps, and Binary Search!
+---
 
-Each solution includes the optimal approach with code. For interview preparation, practice implementing these solutions and understand the time/space complexity of each approach.
+## Day 22: Binary Tree Miscellaneous
+
+### 134. Morris Inorder Traversal
+**Problem:** Inorder traversal without recursion/stack (O(1) space).
+
+**Solution:** Use threading - create temporary links.
+
+```java
+List<Integer> morrisInorder(TreeNode root) {
+    List<Integer> result = new ArrayList<>();
+    TreeNode curr = root;
+    
+    while(curr != null) {
+        if(curr.left == null) {
+            result.add(curr.val);
+            curr = curr.right;
+        } else {
+            TreeNode pred = curr.left;
+            while(pred.right != null && pred.right != curr) {
+                pred = pred.right;
+            }
+            
+            if(pred.right == null) {
+                pred.right = curr;
+                curr = curr.left;
+            } else {
+                pred.right = null;
+                result.add(curr.val);
+                curr = curr.right;
+            }
+        }
+    }
+    return result;
+}
+```
+
+---
+
+### 135. Morris Preorder Traversal
+**Problem:** Preorder traversal with O(1) space.
+
+**Solution:** Morris traversal variant.
+
+```java
+List<Integer> morrisPreorder(TreeNode root) {
+    List<Integer> result = new ArrayList<>();
+    TreeNode curr = root;
+    
+    while(curr != null) {
+        if(curr.left == null) {
+            result.add(curr.val);
+            curr = curr.right;
+        } else {
+            TreeNode pred = curr.left;
+            while(pred.right != null && pred.right != curr) {
+                pred = pred.right;
+            }
+            
+            if(pred.right == null) {
+                result.add(curr.val);
+                pred.right = curr;
+                curr = curr.left;
+            } else {
+                pred.right = null;
+                curr = curr.right;
+            }
+        }
+    }
+    return result;
+}
+```
+
+---
+
+## Day 23: Graph Basics
+
+### 136. Clone Graph
+**Problem:** Deep copy an undirected graph.
+
+**Solution:** DFS/BFS with HashMap to track cloned nodes.
+
+```java
+Map<Node, Node> visited = new HashMap<>();
+
+Node cloneGraph(Node node) {
+    if(node == null) return null;
+    if(visited.containsKey(node)) return visited.get(node);
+    
+    Node clone = new Node(node.val);
+    visited.put(node, clone);
+    
+    for(Node neighbor : node.neighbors) {
+        clone.neighbors.add(cloneGraph(neighbor));
+    }
+    return clone;
+}
+```
+
+---
+
+### 137. DFS of Graph
+**Problem:** Perform DFS traversal of graph.
+
+**Solution:** Recursive or stack-based approach.
+
+```java
+List<Integer> dfsOfGraph(int V, ArrayList<ArrayList<Integer>> adj) {
+    List<Integer> result = new ArrayList<>();
+    boolean[] visited = new boolean[V];
+    dfs(0, adj, visited, result);
+    return result;
+}
+
+void dfs(int node, ArrayList<ArrayList<Integer>> adj, boolean[] visited, List<Integer> result) {
+    visited[node] = true;
+    result.add(node);
+    
+    for(int neighbor : adj.get(node)) {
+        if(!visited[neighbor]) {
+            dfs(neighbor, adj, visited, result);
+        }
+    }
+}
+```
+
+---
+
+### 138. BFS of Graph
+**Problem:** Perform BFS traversal of graph.
+
+**Solution:** Queue-based level order traversal.
+
+```java
+List<Integer> bfsOfGraph(int V, ArrayList<ArrayList<Integer>> adj) {
+    List<Integer> result = new ArrayList<>();
+    boolean[] visited = new boolean[V];
+    Queue<Integer> queue = new LinkedList<>();
+    
+    queue.offer(0);
+    visited[0] = true;
+    
+    while(!queue.isEmpty()) {
+        int node = queue.poll();
+        result.add(node);
+        
+        for(int neighbor : adj.get(node)) {
+            if(!visited[neighbor]) {
+                visited[neighbor] = true;
+                queue.offer(neighbor);
+            }
+        }
+    }
+    return result;
+}
+```
+
+---
+
+### 139. Detect Cycle in Undirected Graph (BFS)
+**Problem:** Detect cycle in undirected graph.
+
+**Solution:** BFS with parent tracking.
+
+```java
+boolean isCycle(int V, ArrayList<ArrayList<Integer>> adj) {
+    boolean[] visited = new boolean[V];
+    
+    for(int i = 0; i < V; i++) {
+        if(!visited[i]) {
+            if(bfsCycleCheck(i, adj, visited)) return true;
+        }
+    }
+    return false;
+}
+
+boolean bfsCycleCheck(int start, ArrayList<ArrayList<Integer>> adj, boolean[] visited) {
+    Queue<int[]> queue = new LinkedList<>();
+    queue.offer(new int[]{start, -1});
+    visited[start] = true;
+    
+    while(!queue.isEmpty()) {
+        int[] curr = queue.poll();
+        int node = curr[0], parent = curr[1];
+        
+        for(int neighbor : adj.get(node)) {
+            if(!visited[neighbor]) {
+                visited[neighbor] = true;
+                queue.offer(new int[]{neighbor, node});
+            } else if(neighbor != parent) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+```
+
+---
+
+### 140. Detect Cycle in Undirected Graph (DFS)
+**Problem:** Detect cycle using DFS.
+
+**Solution:** DFS with parent tracking.
+
+```java
+boolean isCycle(int V, ArrayList<ArrayList<Integer>> adj) {
+    boolean[] visited = new boolean[V];
+    
+    for(int i = 0; i < V; i++) {
+        if(!visited[i]) {
+            if(dfsCycleCheck(i, -1, adj, visited)) return true;
+        }
+    }
+    return false;
+}
+
+boolean dfsCycleCheck(int node, int parent, ArrayList<ArrayList<Integer>> adj, boolean[] visited) {
+    visited[node] = true;
+    
+    for(int neighbor : adj.get(node)) {
+        if(!visited[neighbor]) {
+            if(dfsCycleCheck(neighbor, node, adj, visited)) return true;
+        } else if(neighbor != parent) {
+            return true;
+        }
+    }
+    return false;
+}
+```
+
+---
+
+### 141. Detect Cycle in Directed Graph (DFS)
+**Problem:** Detect cycle in directed graph.
+
+**Solution:** DFS with recursion stack.
+
+```java
+boolean isCyclic(int V, ArrayList<ArrayList<Integer>> adj) {
+    boolean[] visited = new boolean[V];
+    boolean[] recStack = new boolean[V];
+    
+    for(int i = 0; i < V; i++) {
+        if(!visited[i]) {
+            if(dfsCycleCheck(i, adj, visited, recStack)) return true;
+        }
+    }
+    return false;
+}
+
+boolean dfsCycleCheck(int node, ArrayList<ArrayList<Integer>> adj, boolean[] visited, boolean[] recStack) {
+    visited[node] = true;
+    recStack[node] = true;
+    
+    for(int neighbor : adj.get(node)) {
+        if(!visited[neighbor]) {
+            if(dfsCycleCheck(neighbor, adj, visited, recStack)) return true;
+        } else if(recStack[neighbor]) {
+            return true;
+        }
+    }
+    
+    recStack[node] = false;
+    return false;
+}
+```
+
+---
+
+## Day 24: Graph Part II
+
+### 142. Topological Sort (DFS)
+**Problem:** Find topological ordering of DAG.
+
+**Solution:** DFS with stack to store finish times.
+
+```java
+int[] topoSort(int V, ArrayList<ArrayList<Integer>> adj) {
+    boolean[] visited = new boolean[V];
+    Stack<Integer> stack = new Stack<>();
+    
+    for(int i = 0; i < V; i++) {
+        if(!visited[i]) {
+            dfs(i, adj, visited, stack);
+        }
+    }
+    
+    int[] result = new int[V];
+    int idx = 0;
+    while(!stack.isEmpty()) {
+        result[idx++] = stack.pop();
+    }
+    return result;
+}
+
+void dfs(int node, ArrayList<ArrayList<Integer>> adj, boolean[] visited, Stack<Integer> stack) {
+    visited[node] = true;
+    
+    for(int neighbor : adj.get(node)) {
+        if(!visited[neighbor]) {
+            dfs(neighbor, adj, visited, stack);
+        }
+    }
+    stack.push(node);
+}
+```
+
+---
+
+### 143. Topological Sort (BFS/Kahn's Algorithm)
+**Problem:** Topological sort using Kahn's algorithm.
+
+**Solution:** BFS with in-degree counting.
+
+```java
+int[] topoSort(int V, ArrayList<ArrayList<Integer>> adj) {
+    int[] indegree = new int[V];
+    
+    for(int i = 0; i < V; i++) {
+        for(int neighbor : adj.get(i)) {
+            indegree[neighbor]++;
+        }
+    }
+    
+    Queue<Integer> queue = new LinkedList<>();
+    for(int i = 0; i < V; i++) {
+        if(indegree[i] == 0) queue.offer(i);
+    }
+    
+    int[] result = new int[V];
+    int idx = 0;
+    
+    while(!queue.isEmpty()) {
+        int node = queue.poll();
+        result[idx++] = node;
+        
+        for(int neighbor : adj.get(node)) {
+            indegree[neighbor]--;
+            if(indegree[neighbor] == 0) {
+                queue.offer(neighbor);
+            }
+        }
+    }
+    return result;
+}
+```
+
+---
+
+### 144. Number of Islands
+**Problem:** Count number of islands in 2D grid.
+
+**Solution:** DFS/BFS to mark connected components.
+
+```java
+int numIslands(char[][] grid) {
+    if(grid == null || grid.length == 0) return 0;
+    
+    int count = 0;
+    for(int i = 0; i < grid.length; i++) {
+        for(int j = 0; j < grid[0].length; j++) {
+            if(grid[i][j] == '1') {
+                count++;
+                dfs(grid, i, j);
+            }
+        }
+    }
+    return count;
+}
+
+void dfs(char[][] grid, int i, int j) {
+    if(i < 0 || i >= grid.length || j < 0 || j >= grid[0].length || grid[i][j] != '1') {
+        return;
+    }
+    
+    grid[i][j] = '0';
+    dfs(grid, i + 1, j);
+    dfs(grid, i - 1, j);
+    dfs(grid, i, j + 1);
+    dfs(grid, i, j - 1);
+}
+```
+
+---
+
+### 145. Bipartite Graph (BFS)
+**Problem:** Check if graph is bipartite.
+
+**Solution:** 2-coloring using BFS.
+
+```java
+boolean isBipartite(int V, ArrayList<ArrayList<Integer>> adj) {
+    int[] color = new int[V];
+    Arrays.fill(color, -1);
+    
+    for(int i = 0; i < V; i++) {
+        if(color[i] == -1) {
+            if(!bfsCheck(i, adj, color)) return false;
+        }
+    }
+    return true;
+}
+
+boolean bfsCheck(int start, ArrayList<ArrayList<Integer>> adj, int[] color) {
+    Queue<Integer> queue = new LinkedList<>();
+    queue.offer(start);
+    color[start] = 0;
+    
+    while(!queue.isEmpty()) {
+        int node = queue.poll();
+        
+        for(int neighbor : adj.get(node)) {
+            if(color[neighbor] == -1) {
+                color[neighbor] = 1 - color[node];
+                queue.offer(neighbor);
+            } else if(color[neighbor] == color[node]) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+```
+
+---
+
+### 146. Bipartite Graph (DFS)
+**Problem:** Check bipartite using DFS.
+
+**Solution:** DFS with 2-coloring.
+
+```java
+boolean isBipartite(int V, ArrayList<ArrayList<Integer>> adj) {
+    int[] color = new int[V];
+    Arrays.fill(color, -1);
+    
+    for(int i = 0; i < V; i++) {
+        if(color[i] == -1) {
+            if(!dfsCheck(i, 0, adj, color)) return false;
+        }
+    }
+    return true;
+}
+
+boolean dfsCheck(int node, int col, ArrayList<ArrayList<Integer>> adj, int[] color) {
+    color[node] = col;
+    
+    for(int neighbor : adj.get(node)) {
+        if(color[neighbor] == -1) {
+            if(!dfsCheck(neighbor, 1 - col, adj, color)) return false;
+        } else if(color[neighbor] == col) {
+            return false;
+        }
+    }
+    return true;
+}
+```
+
+---
+
+## Day 25: Dynamic Programming
+
+### 147. Maximum Product Subarray
+**Problem:** Find contiguous subarray with maximum product.
+
+**Solution:** Track both max and min products.
+
+```java
+int maxProduct(int[] nums) {
+    int maxProd = nums[0], minProd = nums[0], result = nums[0];
+    
+    for(int i = 1; i < nums.length; i++) {
+        if(nums[i] < 0) {
+            int temp = maxProd;
+            maxProd = minProd;
+            minProd = temp;
+        }
+        
+        maxProd = Math.max(nums[i], maxProd * nums[i]);
+        minProd = Math.min(nums[i], minProd * nums[i]);
+        result = Math.max(result, maxProd);
+    }
+    return result;
+}
+```
+
+---
+
+### 148. Longest Increasing Subsequence
+**Problem:** Find length of longest increasing subsequence.
+
+**Solution:** DP or Binary Search.
+
+```java
+// O(n log n) Binary Search
+int lengthOfLIS(int[] nums) {
+    List<Integer> tails = new ArrayList<>();
+    
+    for(int num : nums) {
+        int left = 0, right = tails.size();
+        while(left < right) {
+            int mid = left + (right - left) / 2;
+            if(tails.get(mid) < num) left = mid + 1;
+            else right = mid;
+        }
+        
+        if(left == tails.size()) tails.add(num);
+        else tails.set(left, num);
+    }
+    return tails.size();
+}
+```
+
+---
+
+### 149. Longest Common Subsequence
+**Problem:** Find LCS of two strings.
+
+**Solution:** 2D DP table.
+
+```java
+int longestCommonSubsequence(String text1, String text2) {
+    int m = text1.length(), n = text2.length();
+    int[][] dp = new int[m + 1][n + 1];
+    
+    for(int i = 1; i <= m; i++) {
+        for(int j = 1; j <= n; j++) {
+            if(text1.charAt(i - 1) == text2.charAt(j - 1)) {
+                dp[i][j] = dp[i - 1][j - 1] + 1;
+            } else {
+                dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1]);
+            }
+        }
+    }
+    return dp[m][n];
+}
+```
+
+---
+
+### 150. 0-1 Knapsack
+**Problem:** Maximize value with weight constraint.
+
+**Solution:** 2D DP.
+
+```java
+int knapsack(int W, int[] wt, int[] val, int n) {
+    int[][] dp = new int[n + 1][W + 1];
+    
+    for(int i = 1; i <= n; i++) {
+        for(int w = 1; w <= W; w++) {
+            if(wt[i - 1] <= w) {
+                dp[i][w] = Math.max(val[i - 1] + dp[i - 1][w - wt[i - 1]], dp[i - 1][w]);
+            } else {
+                dp[i][w] = dp[i - 1][w];
+            }
+        }
+    }
+    return dp[n][W];
+}
+```
+
+---
+
+### 151. Edit Distance
+**Problem:** Minimum operations to convert string1 to string2.
+
+**Solution:** DP with insert/delete/replace operations.
+
+```java
+int minDistance(String word1, String word2) {
+    int m = word1.length(), n = word2.length();
+    int[][] dp = new int[m + 1][n + 1];
+    
+    for(int i = 0; i <= m; i++) dp[i][0] = i;
+    for(int j = 0; j <= n; j++) dp[0][j] = j;
+    
+    for(int i = 1; i <= m; i++) {
+        for(int j = 1; j <= n; j++) {
+            if(word1.charAt(i - 1) == word2.charAt(j - 1)) {
+                dp[i][j] = dp[i - 1][j - 1];
+            } else {
+                dp[i][j] = 1 + Math.min(dp[i - 1][j - 1], 
+                               Math.min(dp[i - 1][j], dp[i][j - 1]));
+            }
+        }
+    }
+    return dp[m][n];
+}
+```
+
+---
+
+### 152. Maximum Sum Increasing Subsequence
+**Problem:** Find maximum sum of increasing subsequence.
+
+**Solution:** DP variant of LIS.
+
+```java
+int maxSumIS(int[] arr, int n) {
+    int[] dp = new int[n];
+    for(int i = 0; i < n; i++) dp[i] = arr[i];
+    
+    int maxSum = arr[0];
+    
+    for(int i = 1; i < n; i++) {
+        for(int j = 0; j < i; j++) {
+            if(arr[j] < arr[i]) {
+                dp[i] = Math.max(dp[i], dp[j] + arr[i]);
+            }
+        }
+        maxSum = Math.max(maxSum, dp[i]);
+    }
+    return maxSum;
+}
+```
+
+---
+
+### 153. Matrix Chain Multiplication
+**Problem:** Minimum cost to multiply chain of matrices.
+
+**Solution:** DP with optimal split point.
+
+```java
+int matrixMultiplication(int[] arr, int n) {
+    int[][] dp = new int[n][n];
+    
+    for(int len = 2; len < n; len++) {
+        for(int i = 1; i < n - len + 1; i++) {
+            int j = i + len - 1;
+            dp[i][j] = Integer.MAX_VALUE;
+            
+            for(int k = i; k < j; k++) {
+                int cost = dp[i][k] + dp[k + 1][j] + arr[i - 1] * arr[k] * arr[j];
+                dp[i][j] = Math.min(dp[i][j], cost);
+            }
+        }
+    }
+    return dp[1][n - 1];
+}
+```
+
+---
+
+## Day 26: Dynamic Programming Part II
+
+### 154. Minimum Path Sum
+**Problem:** Find minimum path sum from top-left to bottom-right.
+
+**Solution:** DP grid traversal.
+
+```java
+int minPathSum(int[][] grid) {
+    int m = grid.length, n = grid[0].length;
+    int[][] dp = new int[m][n];
+    dp[0][0] = grid[0][0];
+    
+    for(int i = 1; i < m; i++) dp[i][0] = dp[i - 1][0] + grid[i][0];
+    for(int j = 1; j < n; j++) dp[0][j] = dp[0][j - 1] + grid[0][j];
+    
+    for(int i = 1; i < m; i++) {
+        for(int j = 1; j < n; j++) {
+            dp[i][j] = grid[i][j] + Math.min(dp[i - 1][j], dp[i][j - 1]);
+        }
+    }
+    return dp[m - 1][n - 1];
+}
+```
+
+---
+
+### 155. Coin Change
+**Problem:** Minimum coins needed for amount.
+
+**Solution:** DP bottom-up.
+
+```java
+int coinChange(int[] coins, int amount) {
+    int[] dp = new int[amount + 1];
+    Arrays.fill(dp, amount + 1);
+    dp[0] = 0;
+    
+    for(int i = 1; i <= amount; i++) {
+        for(int coin : coins) {
+            if(coin <= i) {
+                dp[i] = Math.min(dp[i], dp[i - coin] + 1);
+            }
+        }
+    }
+    return dp[amount] > amount ? -1 : dp[amount];
+}
+```
+
+---
+
+### 156. Subset Sum
+**Problem:** Check if subset exists with given sum.
+
+**Solution:** DP table.
+
+```java
+boolean isSubsetSum(int[] arr, int n, int sum) {
+    boolean[][] dp = new boolean[n + 1][sum + 1];
+    
+    for(int i = 0; i <= n; i++) dp[i][0] = true;
+    
+    for(int i = 1; i <= n; i++) {
+        for(int j = 1; j <= sum; j++) {
+            if(arr[i - 1] <= j) {
+                dp[i][j] = dp[i - 1][j] || dp[i - 1][j - arr[i - 1]];
+            } else {
+                dp[i][j] = dp[i - 1][j];
+            }
+        }
+    }
+    return dp[n][sum];
+}
+```
+
+---
+
+### 157. Rod Cutting
+**Problem:** Maximize value by cutting rod.
+
+**Solution:** Unbounded knapsack variant.
+
+```java
+int cutRod(int[] price, int n) {
+    int[] dp = new int[n + 1];
+    
+    for(int i = 1; i <= n; i++) {
+        for(int j = 1; j <= i; j++) {
+            dp[i] = Math.max(dp[i], price[j - 1] + dp[i - j]);
+        }
+    }
+    return dp[n];
+}
+```
+
+---
+
+### 158. Egg Dropping Problem
+**Problem:** Minimum trials to find threshold floor.
+
+**Solution:** DP with binary search optimization.
+
+```java
+int eggDrop(int eggs, int floors) {
+    int[][] dp = new int[eggs + 1][floors + 1];
+    
+    for(int i = 1; i <= eggs; i++) {
+        dp[i][0] = 0;
+        dp[i][1] = 1;
+    }
+    
+    for(int j = 1; j <= floors; j++) {
+        dp[1][j] = j;
+    }
+    
+    for(int i = 2; i <= eggs; i++) {
+        for(int j = 2; j <= floors; j++) {
+            dp[i][j] = Integer.MAX_VALUE;
+            for(int k = 1; k <= j; k++) {
+                int worst = 1 + Math.max(dp[i - 1][k - 1], dp[i][j - k]);
+                dp[i][j] = Math.min(dp[i][j], worst);
+            }
+        }
+    }
+    return dp[eggs][floors];
+}
+```
+
+---
+
+### 159. Word Break
+**Problem:** Check if string can be segmented into dictionary words.
+
+**Solution:** DP with word dictionary.
+
+```java
+boolean wordBreak(String s, List<String> wordDict) {
+    Set<String> dict = new HashSet<>(wordDict);
+    boolean[] dp = new boolean[s.length() + 1];
+    dp[0] = true;
+    
+    for(int i = 1; i <= s.length(); i++) {
+        for(int j = 0; j < i; j++) {
+            if(dp[j] && dict.contains(s.substring(j, i))) {
+                dp[i] = true;
+                break;
+            }
+        }
+    }
+    return dp[s.length()];
+}
+```
+
+---
+
+### 160. Palindrome Partitioning II
+**Problem:** Minimum cuts for palindrome partitioning.
+
+**Solution:** DP with palindrome check.
+
+```java
+int minCut(String s) {
+    int n = s.length();
+    boolean[][] isPalin = new boolean[n][n];
+    int[] dp = new int[n];
+    
+    for(int i = 0; i < n; i++) {
+        int minCuts = i;
+        for(int j = 0; j <= i; j++) {
+            if(s.charAt(j) == s.charAt(i) && (i - j <= 1 || isPalin[j + 1][i - 1])) {
+                isPalin[j][i] = true;
+                minCuts = (j == 0) ? 0 : Math.min(minCuts, dp[j - 1] + 1);
+            }
+        }
+        dp[i] = minCuts;
+    }
+    return dp[n - 1];
+}
+```
+
+---
+
+## Day 27: Trie
+
+### 161. Implement Trie
+**Problem:** Implement prefix tree.
+
+**Solution:** Tree with 26 children per node.
+
+```java
+class Trie {
+    class TrieNode {
+        TrieNode[] children = new TrieNode[26];
+        boolean isEnd = false;
+    }
+    
+    TrieNode root;
+    
+    public Trie() {
+        root = new TrieNode();
+    }
+    
+    public void insert(String word) {
+        TrieNode node = root;
+        for(char c : word.toCharArray()) {
+            int idx = c - 'a';
+            if(node.children[idx] == null) {
+                node.children[idx] = new TrieNode();
+            }
+            node = node.children[idx];
+        }
+        node.isEnd = true;
+    }
+    
+    public boolean search(String word) {
+        TrieNode node = root;
+        for(char c : word.toCharArray()) {
+            int idx = c - 'a';
+            if(node.children[idx] == null) return false;
+            node = node.children[idx];
+        }
+        return node.isEnd;
+    }
+    
+    public boolean startsWith(String prefix) {
+        TrieNode node = root;
+        for(char c : prefix.toCharArray()) {
+            int idx = c - 'a';
+            if(node.children[idx] == null) return false;
+            node = node.children[idx];
+        }
+        return true;
+    }
+}
+```
+
+---
+
+### 162. Implement Trie II (Count Prefix)
+**Problem:** Trie with prefix counting.
+
+**Solution:** Add counters for words and prefixes.
+
+```java
+class Trie {
+    class TrieNode {
+        TrieNode[] children = new TrieNode[26];
+        int wordCount = 0;
+        int prefixCount = 0;
+    }
+    
+    TrieNode root;
+    
+    public Trie() {
+        root = new TrieNode();
+    }
+    
+    public void insert(String word) {
+        TrieNode node = root;
+        for(char c : word.toCharArray()) {
+            int idx = c - 'a';
+            if(node.children[idx] == null) {
+                node.children[idx] = new TrieNode();
+            }
+            node = node.children[idx];
+            node.prefixCount++;
+        }
+        node.wordCount++;
+    }
+    
+    public int countWordsEqualTo(String word) {
+        TrieNode node = root;
+        for(char c : word.toCharArray()) {
+            int idx = c - 'a';
+            if(node.children[idx] == null) return 0;
+            node = node.children[idx];
+        }
+        return node.wordCount;
+    }
+    
+    public int countWordsStartingWith(String prefix) {
+        TrieNode node = root;
+        for(char c : prefix.toCharArray()) {
+            int idx = c - 'a';
+            if(node.children[idx] == null) return 0;
+            node = node.children[idx];
+        }
+        return node.prefixCount;
+    }
+}
+```
+
+---
+
+### 163. Longest String with All Prefixes
+**Problem:** Find longest string with all prefixes present.
+
+**Solution:** Trie with DFS.
+
+```java
+String longestWord(String[] words) {
+    Trie trie = new Trie();
+    for(String word : words) trie.insert(word);
+    
+    String longest = "";
+    for(String word : words) {
+        if(trie.hasAllPrefixes(word)) {
+            if(word.length() > longest.length() || 
+               (word.length() == longest.length() && word.compareTo(longest) < 0)) {
+                longest = word;
+            }
+        }
+    }
+    return longest;
+}
+```
+
+---
+
+### 164. Number of Distinct Substrings
+**Problem:** Count distinct substrings.
+
+**Solution:** Insert all substrings in Trie, count nodes.
+
+```java
+int countDistinctSubstrings(String s) {
+    Trie trie = new Trie();
+    int count = 0;
+    
+    for(int i = 0; i < s.length(); i++) {
+        TrieNode node = trie.root;
+        for(int j = i; j < s.length(); j++) {
+            int idx = s.charAt(j) - 'a';
+            if(node.children[idx] == null) {
+                node.children[idx] = new TrieNode();
+                count++;
+            }
+            node = node.children[idx];
+        }
+    }
+    return count + 1; // +1 for empty string
+}
+```
+
+---
+
+### 165. Maximum XOR of Two Numbers
+**Problem:** Find maximum XOR of two numbers in array.
+
+**Solution:** Trie on binary representation.
+
+```java
+int findMaximumXOR(int[] nums) {
+    TrieNode root = new TrieNode();
+    
+    // Insert all numbers
+    for(int num : nums) {
+        TrieNode node = root;
+        for(int i = 31; i >= 0; i--) {
+            int bit = (num >> i) & 1;
+            if(node.children[
