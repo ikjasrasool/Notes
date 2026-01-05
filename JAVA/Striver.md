@@ -2,48 +2,45 @@
 
 ## Day 1: Arrays
 
-### 1. Set Matrix Zeroes
-**Problem:** Given a matrix, if an element is 0, set its entire row and column to 0.
+---
 
-**Solution:** Use first row and column as markers. Iterate through matrix, mark rows/columns to be zeroed using first row/col, then set zeros.
+### 1. Set Matrix Zeroes
+
+**Problem:**
+Given an `m x n` integer matrix, if an element is `0`, set its entire row and column to `0`.
+The modification must be done **in place**.
+
+**Solution:**
+Traverse the matrix and record which rows and columns contain `0` using two auxiliary arrays.
+In a second pass, set all elements to `0` if their row or column is marked.
 
 ```java
-void setZeroes(int[][] matrix) {
-    boolean firstRow = false, firstCol = false;
-    
-    // Check if first row/col needs to be zero
-    for(int i = 0; i < matrix.length; i++) {
-        if(matrix[i][0] == 0) firstCol = true;
-    }
-    for(int j = 0; j < matrix[0].length; j++) {
-        if(matrix[0][j] == 0) firstRow = true;
-    }
-    
-    // Mark rows and columns using first row/col
-    for(int i = 1; i < matrix.length; i++) {
-        for(int j = 1; j < matrix[0].length; j++) {
-            if(matrix[i][j] == 0) {
-                matrix[i][0] = 0;
-                matrix[0][j] = 0;
+class Solution {
+    public void setZeroes(int[][] matrix) {
+        int m = matrix.length;
+        int n = matrix[0].length;
+        
+        int[] row = new int[m];
+        int[] col = new int[n];
+        
+        // First pass: mark rows and columns
+        for(int i = 0; i < m; i++) {
+            for(int j = 0; j < n; j++) {
+                if(matrix[i][j] == 0) {
+                    row[i] = 1;
+                    col[j] = 1;
+                }
             }
         }
-    }
-    
-    // Set zeros based on marks
-    for(int i = 1; i < matrix.length; i++) {
-        for(int j = 1; j < matrix[0].length; j++) {
-            if(matrix[i][0] == 0 || matrix[0][j] == 0) {
-                matrix[i][j] = 0;
+        
+        // Second pass: set zeroes
+        for(int i = 0; i < m; i++) {
+            for(int j = 0; j < n; j++) {
+                if(row[i] == 1 || col[j] == 1) {
+                    matrix[i][j] = 0;
+                }
             }
         }
-    }
-    
-    // Handle first row and column
-    if(firstRow) {
-        for(int j = 0; j < matrix[0].length; j++) matrix[0][j] = 0;
-    }
-    if(firstCol) {
-        for(int i = 0; i < matrix.length; i++) matrix[i][0] = 0;
     }
 }
 ```
@@ -51,82 +48,151 @@ void setZeroes(int[][] matrix) {
 ---
 
 ### 2. Pascal's Triangle
-**Problem:** Generate Pascal's Triangle up to n rows.
 
-**Solution:** Each element is sum of two elements above it. First and last elements are 1.
+**Problem:**
+Given an integer `numRows`, return the first `numRows` of Pascal's Triangle.
+Each number is the sum of the two numbers directly above it.
+
+**Solution:**
+Build the triangle row by row.
+The first and last elements of each row are always `1`.
+For other positions, compute the value using the previous row.
 
 ```java
-List<List<Integer>> generate(int numRows) {
-    List<List<Integer>> result = new ArrayList<>();
-    for(int i = 0; i < numRows; i++) {
-        List<Integer> row = new ArrayList<>();
-        for(int j = 0; j <= i; j++) {
-            if(j == 0 || j == i) row.add(1);
-            else row.add(result.get(i-1).get(j-1) + result.get(i-1).get(j));
+class Solution {
+    public List<List<Integer>> generate(int numRows) {
+        List<List<Integer>> res = new ArrayList<>();
+        
+        for(int i = 0; i < numRows; i++) {
+            List<Integer> row = new ArrayList<>();
+            
+            for(int j = 0; j <= i; j++) {
+                if(j == 0 || j == i) {
+                    row.add(1);
+                } else {
+                    int val = res.get(i - 1).get(j - 1) + res.get(i - 1).get(j);
+                    row.add(val);
+                }
+            }
+            res.add(row);
         }
-        result.add(row);
+        return res;
     }
-    return result;
 }
 ```
 
 ---
 
 ### 3. Next Permutation
-**Problem:** Find the next lexicographically greater permutation.
 
-**Solution:** 
-1. Find first decreasing element from right (pivot)
-2. Find smallest element greater than pivot from right
-3. Swap them
-4. Reverse elements after pivot
+**Problem:**
+Given an array of integers `nums`, find the next lexicographically greater permutation of the array.
+If such a permutation does not exist, rearrange it to the lowest possible order (sorted in ascending order).
+The replacement must be done **in place** using **constant extra space**.
+
+**Solution:**
+Traverse from right to find the first decreasing element.
+Swap it with the next greater element on its right.
+Finally, reverse the subarray to the right to get the smallest lexicographical order.
 
 ```java
-void nextPermutation(int[] nums) {
-    int i = nums.length - 2;
-    while(i >= 0 && nums[i] >= nums[i+1]) i--;
-    
-    if(i >= 0) {
-        int j = nums.length - 1;
-        while(nums[j] <= nums[i]) j--;
-        swap(nums, i, j);
+class Solution {
+    public void nextPermutation(int[] nums) {
+        int n = nums.length;
+        int i = n - 2;
+        
+        // Step 1: find first decreasing element
+        while(i >= 0 && nums[i] >= nums[i + 1]) i--;
+        
+        // Step 2: find element just larger than nums[i]
+        if(i >= 0) {
+            int j = n - 1;
+            while(nums[i] >= nums[j]) j--;
+            int t = nums[i];
+            nums[i] = nums[j];
+            nums[j] = t;
+        }
+        
+        // Step 3: reverse the remaining array
+        int start = i + 1, end = n - 1;
+        while(start < end) {
+            int t = nums[start];
+            nums[start] = nums[end];
+            nums[end] = t;
+            start++;
+            end--;
+        }
     }
-    reverse(nums, i+1, nums.length-1);
 }
 ```
 
 ---
 
-### 4. Maximum Subarray (Kadane's Algorithm)
-**Problem:** Find contiguous subarray with maximum sum.
+### 4. Maximum Subarray
 
-**Solution:** Keep track of current sum and max sum. Reset current sum if it becomes negative.
+**Problem:**
+Given an integer array `nums`, find the contiguous subarray (containing at least one number) which has the largest sum and return its sum.
+
+**Solution:**
+Use **Kadane’s Algorithm**.
+Maintain a running sum and reset it to `0` whenever it becomes negative.
+Track the maximum sum encountered during traversal.
 
 ```java
-int maxSubArray(int[] nums) {
-    int maxSum = nums[0], currentSum = nums[0];
-    for(int i = 1; i < nums.length; i++) {
-        currentSum = Math.max(nums[i], currentSum + nums[i]);
-        maxSum = Math.max(maxSum, currentSum);
+class Solution {
+    public int maxSubArray(int[] nums) {
+        int sum = 0;
+        int max = Integer.MIN_VALUE;
+        
+        for(int i = 0; i < nums.length; i++) {
+            sum += nums[i];
+            max = Math.max(max, sum);
+            
+            if(sum < 0) {
+                sum = 0;
+            }
+        }
+        return max;
     }
-    return maxSum;
 }
 ```
 
+
 ---
 
-### 5. Sort Colors (Dutch National Flag)
-**Problem:** Sort array containing only 0s, 1s, and 2s.
+### 5. Sort Colors
 
-**Solution:** Three pointers - low, mid, high. Partition array in one pass.
+**Problem:**
+Given an array `nums` containing only `0`, `1`, and `2`, sort the array in-place so that elements of the same color are adjacent, in the order `0` (red), `1` (white), and `2` (blue).
+You must not use the library sort function.
+
+**Solution:**
+Use the **Dutch National Flag Algorithm**.
+Maintain three pointers to track positions for `0`, `1`, and `2`, and rearrange the elements in a single pass with constant extra space.
 
 ```java
-void sortColors(int[] nums) {
-    int low = 0, mid = 0, high = nums.length - 1;
-    while(mid <= high) {
-        if(nums[mid] == 0) swap(nums, low++, mid++);
-        else if(nums[mid] == 1) mid++;
-        else swap(nums, mid, high--);
+class Solution {
+    public void sortColors(int[] nums) {
+        int r = 0, w = 0, b = nums.length - 1;
+        
+        while(w <= b) {
+            if(nums[w] == 0) {
+                int t = nums[w];
+                nums[w] = nums[r];
+                nums[r] = t;
+                w++;
+                r++;
+            } 
+            else if(nums[w] == 1) {
+                w++;
+            } 
+            else {
+                int t = nums[b];
+                nums[b] = nums[w];
+                nums[w] = t;
+                b--;
+            }
+        }
     }
 }
 ```
@@ -134,19 +200,31 @@ void sortColors(int[] nums) {
 ---
 
 ### 6. Best Time to Buy and Sell Stock
-**Problem:** Find maximum profit from one transaction.
 
-**Solution:** Track minimum price so far and maximum profit.
+**Problem:**
+Given an array `prices` where `prices[i]` is the stock price on the `iᵗʰ` day, choose one day to buy and a later day to sell in order to maximize profit.
+If no profit is possible, return `0`.
+
+**Solution:**
+Track the minimum price seen so far while iterating through the array.
+At each step, compute the profit if sold on that day and update the maximum profit accordingly.
 
 ```java
-int maxProfit(int[] prices) {
-    int minPrice = Integer.MAX_VALUE;
-    int maxProfit = 0;
-    for(int price : prices) {
-        minPrice = Math.min(minPrice, price);
-        maxProfit = Math.max(maxProfit, price - minPrice);
+class Solution {
+    public int maxProfit(int[] prices) {
+        int sell = prices[0];
+        int max = 0;
+        
+        for(int i = 1; i < prices.length; i++) {
+            if(sell > prices[i]) {
+                sell = prices[i];
+            }
+            if(max < prices[i] - sell) {
+                max = prices[i] - sell;
+            }
+        }
+        return max;
     }
-    return maxProfit;
 }
 ```
 
@@ -154,28 +232,35 @@ int maxProfit(int[] prices) {
 
 ## Day 2: Arrays Part II
 
-### 7. Rotate Matrix (90 degrees)
-**Problem:** Rotate matrix 90 degrees clockwise.
+---
 
-**Solution:** Transpose matrix, then reverse each row.
+### 7. Rotate Image
+
+**Problem:**
+Given an `n x n` 2D matrix representing an image, rotate the image by **90 degrees clockwise**.
+The rotation must be done **in place**.
+
+**Solution:**
+Create a temporary matrix to store the rotated values.
+Map each element from the original matrix to its new rotated position, then copy the result back to the original matrix.
 
 ```java
-void rotate(int[][] matrix) {
-    int n = matrix.length;
-    // Transpose
-    for(int i = 0; i < n; i++) {
-        for(int j = i; j < n; j++) {
-            int temp = matrix[i][j];
-            matrix[i][j] = matrix[j][i];
-            matrix[j][i] = temp;
+class Solution {
+    public void rotate(int[][] matrix) {
+        int n = matrix.length;
+        int m = matrix[0].length;
+        int[][] rot = new int[n][m];
+        
+        for(int i = 0; i < n; i++) {
+            for(int j = 0; j < m; j++) {
+                rot[j][n - i - 1] = matrix[i][j];
+            }
         }
-    }
-    // Reverse each row
-    for(int i = 0; i < n; i++) {
-        for(int j = 0; j < n/2; j++) {
-            int temp = matrix[i][j];
-            matrix[i][j] = matrix[i][n-1-j];
-            matrix[i][n-1-j] = temp;
+        
+        for(int i = 0; i < n; i++) {
+            for(int j = 0; j < m; j++) {
+                matrix[i][j] = rot[i][j];
+            }
         }
     }
 }
@@ -183,126 +268,175 @@ void rotate(int[][] matrix) {
 
 ---
 
-### 8. Merge Overlapping Intervals
-**Problem:** Merge all overlapping intervals.
 
-**Solution:** Sort intervals by start time, then merge overlapping ones.
+### 8. Merge Intervals
+
+**Problem:**
+Given an array of intervals where `intervals[i] = [startᵢ, endᵢ]`, merge all overlapping intervals and return the resulting non-overlapping intervals that cover all input intervals.
+
+**Solution:**
+Sort the intervals based on their start times.
+Iterate through the intervals and merge them if they overlap; otherwise, add the previous interval to the result list.
 
 ```java
-int[][] merge(int[][] intervals) {
-    Arrays.sort(intervals, (a, b) -> a[0] - b[0]);
-    List<int[]> result = new ArrayList<>();
-    int[] current = intervals[0];
-    
-    for(int i = 1; i < intervals.length; i++) {
-        if(intervals[i][0] <= current[1]) {
-            current[1] = Math.max(current[1], intervals[i][1]);
-        } else {
-            result.add(current);
-            current = intervals[i];
+class Solution {
+    public int[][] merge(int[][] intervals) {
+        List<int[]> ans = new ArrayList<>();
+        
+        Arrays.sort(intervals, (a, b) -> Integer.compare(a[0], b[0]));
+        
+        int[] pre = intervals[0];
+        for(int i = 1; i < intervals.length; i++) {
+            int[] cur = intervals[i];
+            
+            if(cur[0] <= pre[1]) {
+                pre[1] = Math.max(pre[1], cur[1]);
+            } else {
+                ans.add(pre);
+                pre = cur;
+            }
         }
+        ans.add(pre);
+        
+        return ans.toArray(new int[ans.size()][]);
     }
-    result.add(current);
-    return result.toArray(new int[result.size()][]);
 }
 ```
-
 ---
 
-### 9. Merge Two Sorted Arrays
-**Problem:** Merge two sorted arrays without extra space.
+### 9. Merge Sorted Array
 
-**Solution:** Use gap method or two pointers from end.
+**Problem:**
+You are given two sorted integer arrays `nums1` and `nums2`, and two integers `m` and `n` representing the number of valid elements in each array.
+Merge `nums2` into `nums1` as one sorted array in non-decreasing order.
+The final result must be stored **in `nums1` itself**.
+
+**Solution:**
+Use a **three-pointer approach** starting from the end of both arrays.
+Compare elements from the back and place the larger one at the end of `nums1` to avoid overwriting useful values.
 
 ```java
-void merge(int[] nums1, int m, int[] nums2, int n) {
-    int i = m - 1, j = n - 1, k = m + n - 1;
-    while(j >= 0) {
-        if(i >= 0 && nums1[i] > nums2[j]) {
-            nums1[k--] = nums1[i--];
-        } else {
+class Solution {
+    public void merge(int[] nums1, int m, int[] nums2, int n) {
+        int i = m - 1, j = n - 1, k = m + n - 1;
+        
+        while(i >= 0 && j >= 0) {
+            if(nums1[i] > nums2[j]) {
+                nums1[k--] = nums1[i--];
+            } else {
+                nums1[k--] = nums2[j--];
+            }
+        }
+        
+        while(j >= 0) {
             nums1[k--] = nums2[j--];
         }
     }
 }
 ```
 
----
-
-### 10. Find Duplicate Number
-**Problem:** Find the duplicate number in array of n+1 integers where each is between 1 and n.
-
-**Solution:** Floyd's Cycle Detection (Tortoise and Hare).
-
-```java
-int findDuplicate(int[] nums) {
-    int slow = nums[0], fast = nums[0];
-    do {
-        slow = nums[slow];
-        fast = nums[nums[fast]];
-    } while(slow != fast);
-    
-    slow = nums[0];
-    while(slow != fast) {
-        slow = nums[slow];
-        fast = nums[fast];
-    }
-    return slow;
-}
-```
 
 ---
 
-### 11. Repeat and Missing Number
-**Problem:** Find the repeating and missing number in array 1 to N.
+### 10. Find the Duplicate Number
 
-**Solution:** Use mathematical equations or XOR.
+**Problem:**
+Given an array `nums` containing `n + 1` integers where each integer is in the range `[1, n]`, there is exactly one duplicated number.
+Return the duplicate number.
+
+**Solution:**
+Use a `HashSet` to keep track of visited numbers.
+While traversing the array, return the number that is encountered more than once.
 
 ```java
-int[] findMissingRepeating(int[] arr) {
-    long n = arr.length;
-    long sumN = n * (n + 1) / 2;
-    long sumN2 = n * (n + 1) * (2 * n + 1) / 6;
-    
-    long sum = 0, sum2 = 0;
-    for(int num : arr) {
-        sum += num;
-        sum2 += (long)num * num;
+class Solution {
+    public int findDuplicate(int[] nums) {
+        HashSet<Integer> h = new HashSet<>();
+        
+        for(int i = 0; i < nums.length; i++) {
+            if(h.contains(nums[i])) {
+                return nums[i];
+            }
+            h.add(nums[i]);
+        }
+        return -1;
     }
-    
-    long diff = sum - sumN; // X - Y
-    long sumDiff = sum2 - sumN2; // X^2 - Y^2
-    long add = sumDiff / diff; // X + Y
-    
-    int repeat = (int)(diff + add) / 2;
-    int missing = (int)(add - repeat);
-    return new int[]{repeat, missing};
 }
 ```
+
+
 
 ---
 
-### 12. Inversion Count
-**Problem:** Count pairs (i, j) where i < j and arr[i] > arr[j].
+### 11. Find the Repeating and Missing Numbers (Hashing Approach)
 
-**Solution:** Use merge sort and count inversions during merge.
+**Problem:**
+Given an integer array `nums` of size `n` containing values from `1` to `n`, one number appears **twice** and one number is **missing**.
+Return the repeating number at index `0` and the missing number at index `1`.
+You are **not allowed to modify the original array**.
+
+**Solution:**
+Use a frequency array to count occurrences of each number.
+
+* If a number appears **twice**, it is the repeating number.
+* If a number appears **zero times**, it is the missing number.
 
 ```java
-int inversionCount(int[] arr) {
-    return mergeSort(arr, 0, arr.length - 1);
-}
+class Solution {
+    public int[] findMissingRepeatingNumbers(int[] nums) {
+        int n = nums.length;
+        int[] freq = new int[n + 1]; // frequency array
 
-int mergeSort(int[] arr, int left, int right) {
-    int count = 0;
-    if(left < right) {
-        int mid = left + (right - left) / 2;
-        count += mergeSort(arr, left, mid);
-        count += mergeSort(arr, mid + 1, right);
-        count += merge(arr, left, mid, right);
+        // Count occurrences
+        for (int num : nums) {
+            freq[num]++;
+        }
+
+        int repeating = -1, missing = -1;
+
+        // Identify repeating and missing numbers
+        for (int i = 1; i <= n; i++) {
+            if (freq[i] == 2) repeating = i;
+            if (freq[i] == 0) missing = i;
+        }
+
+        return new int[]{repeating, missing};
     }
-    return count;
 }
 ```
+
+
+---
+
+### 12. Count Inversions in an Array (Brute Force)
+
+**Problem:**
+Given an array of `N` integers, count the **inversions** in the array.
+An inversion is a pair `(i, j)` such that `i < j` and `A[i] > A[j]`.
+It measures how far the array is from being sorted.
+
+**Solution:**
+Use two nested loops to compare each element with all elements to its right. Increment a counter whenever `A[i] > A[j]`.
+
+```java
+class Solution {
+    public int countInversions(int[] nums) {
+        int n = nums.length;
+        int cnt = 0; // inversion count
+
+        for (int i = 0; i < n; i++) {
+            for (int j = i + 1; j < n; j++) {
+                if (nums[i] > nums[j]) {
+                    cnt++;
+                }
+            }
+        }
+
+        return cnt;
+    }
+}
+```
+
 
 ---
 
